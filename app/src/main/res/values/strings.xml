@@ -1,0 +1,94 @@
+<resources>
+    <string name="app_name">WaterMeter</string>
+    <string name="title_home" translatable="false">全部</string>
+    <string name="title_dashboard" translatable="false">未抄</string>
+    <string name="title_notifications" translatable="false">已抄</string>
+    <string name="Upload" translatable="false">Upload</string>
+    <string name="Error" translatable="false">Error</string>
+    <string name="Complete" translatable="false">Complete</string>
+    <string name="select" translatable="false">Select USB Web Camera</string>
+    <string name="camera" translatable="false">Camera</string>
+    <string name="refresh" translatable="false">Refresh</string>
+    <string name="no_device" translatable="false">No USB camera found</string>
+
+    <string name="title_activity_list_view" translatable="false">ListViewActivity</string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
+    <string name="title_activity_bchlist_view" translatable="false">BCHListViewActivity</string>
+    <!-- playback activity -->
+    <string name="label_Playback_Activity">Album</string>
+    <string name="tv_Playback_Photos">Photos</string>
+    <string name="tv_Playback_Videos">Videos</string>
+    <string name="tv_Playback_BuiltinSdcard">手机存储</string>
+    <string name="tv_Playback_ExternalSdcard">外置SD卡</string>
+    <string name="str_playback_notfindexcard">未发现存储设备</string>
+    <string name="str_playback_warning">警告</string>
+    <string name="str_playback_deletephoto">删除此图片？</string>
+    <string name="str_playback_deletevideo">删除此视频？</string>
+    <string name="str_playback_confirm">确认</string>
+    <string name="str_playback_cancel">取消</string>
+
+    <!-- display image activity -->
+    <string name="iv_Display_Image_Content">images</string>
+
+    <!-- gridview photos item -->
+    <string name="tv_Photo_Name">default.jpg</string>
+    <string name="description_iv_change_cam">change camera local or wifi cam</string>
+    <string name="Iv_Pop_Selector">listview selector in popupwindow</string>
+
+    <!-- videoplayer.xml -->
+    <string name="tv_VideoPlayer_Time">tv_VideoPlayer_Time</string>
+
+    <!-- activity_setting.xml -->
+    <string name="tv_SdcardChoose">外置SD卡</string>
+    <string name="tv_TurnDirection">按键靠左</string>
+    <string name="txt_modify_name">修改WiFi名</string>
+    <string name="txt_reboot_device">重启设备</string>
+    <string name="txt_modify_password">修改密码</string>
+    <string name="txt_clear_password">清除密码</string>
+    <string name="txt_change_resolution">修改分辨率</string>
+    <string name="str_set_namenull">名称不能为空！</string>
+    <string name="str_set_lessthaneight">密码不能少于8位！</string>
+    <string name="str_set_setok">设置成功！</string>
+    <string name="str_set_setfail">设置失败！</string>
+    <string name="str_set_tips">提示</string>
+    <string name="str_set_ok">确定</string>
+    <string name="str_set_wrongres">错误的分辨率</string>
+
+    <!-- select activity -->
+    <string name="txt_select_onemorepress">再按一次退出拍照</string>
+
+    <!-- main activity -->
+    <string name="txt_stop_record">请先停止录像</string>
+    <string name="SD_card_full">SD卡空间不足</string>
+
+    <!-- ImagePager Activity -->
+    <string name="str_imagepager_filename">文件名：</string>
+    <string name="str_imagepager_filepath">文件路径：</string>
+    <string name="str_imagepager_time">时间：</string>
+    <string name="str_imagepager_filesize">文件大小：</string>
+    <string name="str_imagepager_resolution">分辨率：</string>
+    <string name="str_imagepager_filetype">文件类型：</string>
+    <string-array name="menulist">
+        <item>"版本号"</item>
+        <item>"动态IP"</item>
+        <item>"数据切换"</item>
+        <item>"上传列表"</item>
+        <item>"导出列表"</item>
+        <item>"年份选择"</item>
+        <item>"设备切换"</item>
+        <item>"其他设置"</item>
+    </string-array>
+
+    <!--  蓝牙打印机-->
+    <!--  蓝牙打印机-->
+    <!--  DeviceListActivity -->
+    <string name="scanning" translatable="false">Scanning Device&#8230;</string>
+    <string name="select_device" translatable="false">选择设备</string>
+    <string name="none_paired" translatable="false">未配对设备</string>
+    <string name="none_found" translatable="false">无设备发现</string>
+    <string name="title_paired_devices" translatable="false">配对设备</string>
+    <string name="title_other_devices" translatable="false">其他可用设备</string>
+    <string name="button_scan" translatable="false">扫描设备</string>
+
+</resources>

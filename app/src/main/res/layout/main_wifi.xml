@@ -1,0 +1,47 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ff000000"
+    android:orientation="vertical"
+    tools:context="com.example.leonardo.watermeter.ui.WifiActivity">
+
+    <com.wifi.icamera.SurfaceView
+        android:id="@+id/mSurfaceView"
+        android:layout_width="480dp"
+        android:layout_height="600dp"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:id="@+id/layout_Left_Menubar"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:orientation="vertical"
+        android:padding="10dip">
+
+        <ImageView
+            android:id="@+id/iv_Main_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:src="@drawable/cancel"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/iv_Main_TakePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:src="@drawable/main_takephoto_state" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</RelativeLayout>

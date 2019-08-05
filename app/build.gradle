@@ -1,0 +1,80 @@
+
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion '28.0.3'
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+    defaultConfig {
+        applicationId "com.example.leonardo.watermeter"
+        minSdkVersion 23
+        targetSdkVersion 26
+        versionCode 9
+        versionName "3.1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi', "armeabi-v7a"//, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            jniDebuggable true
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation files('libs/ksoap2-android-assembly-2.4-jar-with-dependencies.jar')
+    implementation files('libs/gson-2.3.1.jar')
+    implementation files('libs/litepal-1.5.1.jar')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:support-vector-drawable:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    testImplementation 'junit:junit:4.12'
+    implementation files('libs/BaiduLBS_Android.jar')
+    implementation files('libs/httpmime-4.1.2.jar')
+    implementation files('libs/axis.jar')
+    implementation files('libs/wsdl4j-1.5.1.jar')
+    implementation files('libs/saaj.jar')
+    implementation files('libs/axis-ant.jar')
+    implementation files('libs/commons-discovery-0.2.jar')
+    implementation files('libs/commons-logging-1.0.4.jar')
+    implementation files('libs/jaxrpc.jar')
+    implementation files('libs/log4j-1.2.8.jar')
+    implementation files('libs/ZBarDecoder.jar')
+    implementation files('libs/poi-3.17.jar')
+    implementation 'org.apache.commons:commons-lang3:3.4'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.github.itgoyo:LogToFile:v1.0'
+    implementation files('libs/btsdk.jar')
+    implementation 'com.alibaba:fastjson:1.2.57'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation files('libs\\WBUtils-1.1.jar')
+    //注释掉原有bugly的仓库
+    //compile 'com.tencent.bugly:crashreport:latest.release'  其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.3.2
+    implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    implementation files('src\\main\\jniLibs\\sydp_1.0.3_release_20190730.aar')
+    //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
+    implementation 'com.zhy:okhttputils:2.6.2'
+
+}

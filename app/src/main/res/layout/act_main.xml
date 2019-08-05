@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:backgroundTintMode="add"
+    android:padding="5dp">
+    <com.example.leonardo.watermeter.usbcamera.UVCCameraTextureView
+        android:id="@+id/UVCCameraTextureView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cpb_grey"
+        android:scaleType="fitCenter"
+        android:layout_centerInParent="true" />
+    <ImageButton
+        android:id="@+id/savePicB"
+        android:layout_width="70dp"
+        android:layout_height="230dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/take_photo_usb"
+        android:onClick="savePic"
+        android:textSize="20dp"
+        android:text="拍摄"/>
+</RelativeLayout>

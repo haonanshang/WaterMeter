@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="cpb_grey">#ffdedede</color>
+    <color name="cpb_blue">#ff0099cc</color>
+    <color name="cpb_blue_dark">#ff00719b</color>
+    <color name="cpb_red">#ffff4444</color>
+    <color name="cpb_red_dark">#ffcd3a3a</color>
+    <color name="cpb_green">#ff99cc00</color>
+    <color name="cpb_green_dark">#009b12</color>
+    <color name="cpb_white">@android:color/white</color>
+    <color name="watertextcolor">#DFDFDF</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="black">#000000</color>
+    <color name="red">#ff0000</color>
+    <color name="white">#fff</color>
+    <color name="yellow">#FFFFD900</color>
+    <color name="keyboardcolor">#ffffff</color>
+    <color name="font_common_1">#424242</color>
+    <color name="font_common_2">#a1a1a1</color>
+    <color name="font_blue">#42369a</color>
+    <color name="commom_background">#f3f3f3</color>
+    <color name="watermark_color">#EAC60F</color>
+    <color name="back_color">#1790ED</color>
+</resources>

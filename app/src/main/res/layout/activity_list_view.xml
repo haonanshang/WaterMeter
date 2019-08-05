@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/back_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="月份列表"
+            android:textColor="@color/cpb_white"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/menu_dr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:src="@drawable/menu_icon" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_border"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/downloadBC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="downloadBCEvent"
+            android:text="下载任务" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tipHeadTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="IMEI"
+                    android:textColor="@color/cpb_blue_dark" />
+
+                <TextView
+                    android:id="@+id/showIMEI"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/tipHeadTextView"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="6666" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="年份"
+                    android:textColor="@color/cpb_blue_dark" />
+
+                <TextView
+                    android:id="@+id/showYear"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/tipHeadTextView"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:text="2018" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/uploadALL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:onClick="uploadEvent"
+            android:text="上传任务" />
+    </LinearLayout>
+
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/tipR"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_below="@id/listViewR1"-->
+    <!--android:layout_margin="4dp"-->
+    <!--android:background="@drawable/bg_border"-->
+    <!--android:visibility="gone">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/numberAll"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:text="全部数据：9999" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/numberNot"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerInParent="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:text="未抄数据：6666"-->
+    <!--android:textColor="@color/cpb_red" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/numberDone"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:text="已抄数据：3333" />-->
+    <!--</RelativeLayout>-->
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/monthListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</LinearLayout>
