@@ -5,9 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.MyApplication;
+import com.shuibiao.jni.MyApplication;
 import com.example.leonardo.watermeter.ui.TaskShowActivity;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 import com.shuibiao.jni.JNIInterface;
 
 import org.apache.axis.utils.StringUtils;
@@ -40,21 +39,17 @@ public class FaceThread extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... voids) {
         String result = null;
-        try {
-            int[] recogNumRes = new int[8];
-            float[] numScore = new float[1];
-            int[] numsLen = new int[1];
-            JNIInterface jniInterface = MyApplication.getInstance().getJniInterface();
-            int perocessResult = jniInterface.processImgPathNum(jniInterface.getMhandler(), imgPath, recogNumRes, numScore, numsLen);
-            if (perocessResult == 2) {
-                StringBuffer recogBuffer = new StringBuffer();
-                for (int i = 0; i < numsLen[0]; i++) {
-                    recogBuffer.append(recogNumRes[i]);
-                }
-                result = recogBuffer.toString();
+        int[] recogNumRes = new int[8];
+        float[] numScore = new float[1];
+        int[] numsLen = new int[1];
+        JNIInterface jniInterface = MyApplication.getInstance().getJniInterface();
+        int perocessResult = jniInterface.processImgPathNum(jniInterface.getMhandler(), imgPath, recogNumRes, numScore, numsLen);
+        if (perocessResult == 2) {
+            StringBuffer recogBuffer = new StringBuffer();
+            for (int i = 0; i < numsLen[0]; i++) {
+                recogBuffer.append(recogNumRes[i]);
             }
-        } catch (Exception e) {
-            LogToFileUtils.write(e.toString());
+            result = recogBuffer.toString();
         }
         return result;
     }

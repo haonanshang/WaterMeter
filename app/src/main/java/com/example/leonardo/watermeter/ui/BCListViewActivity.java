@@ -23,15 +23,18 @@ import com.FireHydrant.ui.FireHydrantTaskListActivity;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.BchData;
 import com.example.leonardo.watermeter.entity.DetailData;
+import com.example.leonardo.watermeter.entity.SortDataBean;
 import com.example.leonardo.watermeter.global.GlobalData;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -47,8 +50,8 @@ public class BCListViewActivity extends Activity {
     String cbyfString = "";
     private List<BchData> bchDataList;
     private List<FireHydrantBchData> fireHydrantBchDataList;
-    private ArrayList<String> treelist = new ArrayList<>();
     private Switch detect_Switch;
+    private List<SortDataBean> sortList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +83,12 @@ public class BCListViewActivity extends Activity {
         baseAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
-                return treelist.size();
+                return sortList.size();
             }
 
             @Override
             public Object getItem(int position) {
-                return treelist.get(position);
+                return sortList.get(position);
             }
 
             @Override
@@ -109,8 +112,9 @@ public class BCListViewActivity extends Activity {
                      * 判断表册是否允许手机端识别 默认数据库是自动识别的
                      * 根据数据库状态设置switch的状态
                      */
-                    BchData bchData = DataSupport.where("cbyf= ? and bch= ?", cbyfString, treelist.get(position)).findFirst(BchData.class);
-                    if (bchData.getIsDetectByPhone().equals("0")) {
+                    final SortDataBean sortDataBean = sortList.get(position);
+                    detect_Switch.setOnCheckedChangeListener(null);
+                    if (sortDataBean.getIsDetectByPhone().equals("0")) {
                         detect_Switch.setChecked(true);
                     } else {
                         detect_Switch.setChecked(false);
@@ -119,7 +123,6 @@ public class BCListViewActivity extends Activity {
                         @Override
                         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                             String isDetectFlag;
-                            Log.e("detectFlag", "按钮是否被点击：" + b);
                             if (b) {
                                 isDetectFlag = "0";
                                 detect_Switch.setTextOn("开");
@@ -129,7 +132,8 @@ public class BCListViewActivity extends Activity {
                             }
                             ContentValues values = new ContentValues();
                             values.put("isDetectByPhone", isDetectFlag);
-                            DataSupport.updateAll(BchData.class, values, "cbyf= ? and bch= ?", cbyfString, treelist.get(position));
+                            DataSupport.updateAll(BchData.class, values, "cbyf= ? and bch= ?", cbyfString, sortDataBean.getBch());
+                            sortList.get(position).setIsDetectByPhone(isDetectFlag);
                         }
                     });
                 } else {
@@ -138,7 +142,7 @@ public class BCListViewActivity extends Activity {
                 monthTextView = (TextView) view.findViewById(R.id.contentListLeft);
                 bchTextView = (TextView) view.findViewById(R.id.contentListRight);
                 monthTextView.setText(months[monthIndex]);
-                bchTextView.setText(treelist.get(position));
+                bchTextView.setText(sortList.get(position).getBch());
                 return view;
             }
         };
@@ -160,14 +164,13 @@ public class BCListViewActivity extends Activity {
                     if (!detailDataList.isEmpty()) {
                         Bundle bundle = new Bundle();
                         bundle.putString("cbyf", cbyfString);
-                        bundle.putString("bch", treelist.get(i));
+                        bundle.putString("bch", sortList.get(i).getBch());
                         intent.putExtras(bundle);
                         startActivity(intent);
                     } else {
                         Toast.makeText(BCListViewActivity.this, "没有数据，请返回上一级重新下载", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    LogToFileUtils.write(e.toString());
                 }
             }
         });
@@ -177,30 +180,42 @@ public class BCListViewActivity extends Activity {
     将表册号按自然顺序排序
      */
     private void showtreeset() {
-        TreeSet<String> treeSet = new TreeSet<>();
+        TreeMap<String, String> sortMap = new TreeMap<>();
+        HashMap<String, String> treeMap = new HashMap<>();
         if (SharedPreUtils.getDataType(this)) {
             for (int i = 0; i < fireHydrantBchDataList.size(); i++) {
-                if (treeSet.contains(fireHydrantBchDataList.get(i).getBch())) {
-                    treelist.add(fireHydrantBchDataList.get(i).getBch());
+                if (sortMap.containsKey(fireHydrantBchDataList.get(i).getBch())) {
+                    treeMap.put(fireHydrantBchDataList.get(i).getBch(), "0");
                 } else {
-                    treeSet.add(fireHydrantBchDataList.get(i).getBch());
+                    sortMap.put(fireHydrantBchDataList.get(i).getBch(), "0");
                 }
             }
-            Iterator it = treeSet.iterator();
+            Set sortSet = sortMap.keySet();
+            Iterator it = sortSet.iterator();
             while (it.hasNext()) {
-                treelist.add(it.next().toString());
+                sortList.add(new SortDataBean(it.next().toString(), "0"));
             }
         } else {
             for (int i = 0; i < bchDataList.size(); i++) {
-                if (treeSet.contains(bchDataList.get(i).getBch())) {
-                    treelist.add(bchDataList.get(i).getBch());
+                if (sortMap.containsKey(bchDataList.get(i).getBch())) {
+                    treeMap.put(bchDataList.get(i).getBch(), bchDataList.get(i).getIsDetectByPhone());
                 } else {
-                    treeSet.add(bchDataList.get(i).getBch());
+                    sortMap.put(bchDataList.get(i).getBch(), bchDataList.get(i).getIsDetectByPhone());
                 }
             }
+            Set sortSet = sortMap.keySet();
+            Iterator it = sortSet.iterator();
+            while (it.hasNext()) {
+                String key = it.next().toString();
+                sortList.add(new SortDataBean(key, sortMap.get(key)));
+            }
+        }
+        if (treeMap.size() > 0) {
+            Set treeSet = treeMap.keySet();
             Iterator it = treeSet.iterator();
             while (it.hasNext()) {
-                treelist.add(it.next().toString());
+                String key = it.next().toString();
+                sortList.add(new SortDataBean(key, treeMap.get(key)));
             }
         }
     }

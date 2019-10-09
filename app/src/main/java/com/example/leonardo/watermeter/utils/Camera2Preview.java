@@ -19,6 +19,7 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Range;
 import android.util.Size;
@@ -29,7 +30,6 @@ import android.view.TextureView;
 import android.widget.Toast;
 
 import com.example.leonardo.watermeter.ui.CustomCameraActivity;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,29 +66,12 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
     String imagePath;
     private int lenth, screenWidth, screenHeight;
     double lastzoom = 0.0f;
-    int maxRealRadio;
+    //int maxRealRadio;
     float y = 0;
     boolean FingerIsMove = false;
     int AE_COMPENSATION_RANGE = 0;
     Rect maxZoomrect, captureRect;
     Range aeRange;//曝光范围
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    captureRect = (Rect) msg.obj;
-                    previewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, captureRect);
-                    try {
-                        captureSession.setRepeatingRequest(previewRequestBuilder.build(), null, null);
-                    } catch (CameraAccessException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-            }
-        }
-    };
 
     public Camera2Preview(Context context, CustomCameraActivity activity, String imagePath) {
         super(context);
@@ -131,7 +114,7 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
             aeRange = mCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_COMPENSATION_RANGE);
             captureRect = new Rect(CustomCamerautils2.getLocalRect(maxZoomrect, lastzoom));
             //最大的数字缩放
-            maxRealRadio = mCameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM).intValue();
+            //maxRealRadio = mCameraCharacteristics.get(CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM).intValue();
             setUpCameraOutputs(width, height);
             // 打开摄像头
             mCameraManager.openCamera(mCameraId, stateCallback, null); // ①
@@ -146,7 +129,7 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP); // 获取摄像头支持的配置属性
             previewSize = CustomCamerautils2.chooseMaxSize(map.getOutputSizes(SurfaceTexture.class), width, height);
             Size imageviewSize = CustomCamerautils2.chooseMinSize(map.getOutputSizes(ImageFormat.JPEG), width, height);
-            imageReader = ImageReader.newInstance(imageviewSize.getWidth(), imageviewSize.getHeight(), ImageFormat.JPEG, 2);
+            imageReader = ImageReader.newInstance(imageviewSize.getWidth(), imageviewSize.getHeight(), ImageFormat.JPEG, 1);
             imageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -170,7 +153,6 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
                         }
                         image.close();
                         activity.returnTaskShowActivity();
-
                     }
                 }
             }, null);
@@ -193,15 +175,24 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
         // 摄像头断开连接时激发该方法
         @Override
         public void onDisconnected(CameraDevice cameraDevice) {
-            mCameraDevice.close();
-            mCameraDevice = null;
+            if (cameraDevice != null) {
+                mCameraDevice.close();
+                mCameraDevice = null;
+            }
         }
 
         // 打开摄像头出现错误时激发该方法
         @Override
         public void onError(CameraDevice cameraDevice, int error) {
-            mCameraDevice.close();
-            mCameraDevice = null;
+            if (cameraDevice != null) {
+                mCameraDevice.close();
+                mCameraDevice = null;
+            }
+        }
+
+        @Override
+        public void onClosed(@NonNull CameraDevice camera) {
+            super.onClosed(camera);
         }
     };
 
@@ -385,5 +376,13 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
         }
     }
 
+    /**
+     *
+     */
+    public void closeCamera(){
+         if(mCameraDevice!=null){
+             mCameraDevice.close();
+         }
+    }
 }
 

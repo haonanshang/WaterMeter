@@ -1,15 +1,10 @@
 package com.objecteye.author;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
-import android.util.Log;
 
-import com.MyApplication;
-import com.example.leonardo.watermeter.ui.MonthListViewActivity;
 import com.syteco.android.hardwareinfo.deploy.AuthBody;
 import com.syteco.android.hardwareinfo.deploy.DeploymentTool;
 import com.syteco.android.hardwareinfo.utils.JsonUtils;

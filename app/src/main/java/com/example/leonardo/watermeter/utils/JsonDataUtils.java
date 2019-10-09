@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import com.FireHydrant.entity.FireHydrantDetailData;
 import com.example.leonardo.watermeter.entity.DetailData;
 import com.example.leonardo.watermeter.entity.UploadTaskBean;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,10 +60,8 @@ public class JsonDataUtils {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                LogToFileUtils.write(e.toString());
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
-                LogToFileUtils.write(e.toString());
             }
             jsonArray.put(jsonObject);
         }

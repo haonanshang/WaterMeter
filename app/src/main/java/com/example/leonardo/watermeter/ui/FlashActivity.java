@@ -5,18 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.MyApplication;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.global.GlobalData;
-import com.example.leonardo.watermeter.utils.CustomCamerautils2;
 import com.example.leonardo.watermeter.utils.DeleteImage;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 import com.example.leonardo.watermeter.utils.PermissionsChecker;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
-import com.objecteye.author.AuthorCustomUtils;
 
 /**
  * Created by Administrator on 2017/8/2 0002.
@@ -39,16 +34,9 @@ public class FlashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_flash);
         /**
-         * 初始化JNI
-         */
-        if (AuthorCustomUtils.CheckLicence()) {
-            MyApplication.getInstance().getJniInterface();
-        }
-        /**
          * 获取设备信息
          */
         GlobalData.Brand = android.os.Build.BRAND;
-        LogToFileUtils.init(this);
         new SharedPreUtils().SetIp("106.14.33.55:8080", FlashActivity.this);
         mPermissionsChecker = new PermissionsChecker(this);
         if (!mPermissionsChecker.lacksPermissions(PERMISSIONS)) {

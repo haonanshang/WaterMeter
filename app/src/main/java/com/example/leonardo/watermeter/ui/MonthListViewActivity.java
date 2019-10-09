@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -25,7 +24,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,7 +31,6 @@ import android.widget.Toast;
 
 import com.FireHydrant.entity.FireHydrantBchData;
 import com.FireHydrant.entity.FireHydrantDetailData;
-import com.MyApplication;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.BchData;
 import com.example.leonardo.watermeter.entity.DetailData;
@@ -49,7 +46,6 @@ import com.extended.CancelUploadMessageActiviy;
 import com.extended.CustomYearDialog;
 import com.extended.DownLoadMessageActiviy;
 import com.extended.OtherSettingActivity;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 import com.objecteye.author.AuthorApplication;
 import com.tencent.bugly.Bugly;
 
@@ -104,7 +100,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
         initDrawer();
         initMenuListView();
         //启动授权服务
-        AuthorApplication.startService(MonthListViewActivity.this);
+        AuthorApplication.startService(this);
     }
 
     /**
@@ -562,7 +558,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MyApplication.releaseJni();
+        AuthorApplication.stopService();
     }
 
     @Override

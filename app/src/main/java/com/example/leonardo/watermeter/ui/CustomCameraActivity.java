@@ -247,6 +247,7 @@ public class CustomCameraActivity extends Activity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mPreview.closeCamera();
         if (mMedia != null) {
             mMedia.release();
         }

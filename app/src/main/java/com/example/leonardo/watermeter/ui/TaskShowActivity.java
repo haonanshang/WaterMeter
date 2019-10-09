@@ -56,7 +56,6 @@ import com.example.leonardo.watermeter.utils.QuantityCalculationUtils;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 import com.example.leonardo.watermeter.utils.VolumeManage;
 import com.example.leonardo.watermeter.utils.WaterBudgetUtils;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 import com.objecteye.sy.wbjnidemo.WBJNIActivity;
 import com.objecteye.sy.wbjnidemo.WBJNIUtils;
 import com.objecteye.sy.wifibox.WBValues;
@@ -385,11 +384,9 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                 } catch (Exception e) {
                     Toast.makeText(this, "图片加载异常，请重新拍照", Toast.LENGTH_SHORT).show();
                     showImageView.setImageResource(R.mipmap.ic_default);
-                    LogToFileUtils.write(e.toString());
                 } catch (OutOfMemoryError error) {
                     Toast.makeText(this, "图片加载异常，请重新拍照", Toast.LENGTH_SHORT).show();
                     showImageView.setImageResource(R.mipmap.ic_default);
-                    LogToFileUtils.write(error.toString());
                 }
             } else {
                 showImageView.setImageResource(R.mipmap.ic_default);
@@ -750,7 +747,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                     intent = new Intent(TaskShowActivity.this, WifiActivity.class);
                     requestCode = 101;
                 } else {
-                    intent = new Intent(TaskShowActivity.this, WebviewActivity.class);
+                    intent = new Intent(TaskShowActivity.this, WBJNIActivity.class);
                     requestCode = 100;
                 }
                 Bundle bundle = new Bundle();
@@ -880,7 +877,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                          */
                         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM-dd HH:mm:ss");
                         String waterMarkTime = simpleDateFormat1.format(new java.util.Date());
-                        Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 90);
+                        Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0);
                         showImageView.setImageBitmap(bmp);
                         updateDataAfterPhoto(localImageStr);
                     }
@@ -933,7 +930,6 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
-                        LogToFileUtils.write(e.toString());
                     }
                 }
                 break;
@@ -1009,7 +1005,6 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            LogToFileUtils.write(e.toString());
         }
     }
 
@@ -1062,7 +1057,6 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
             currentWaterSum.setTextColor(getResources().getColor(R.color.cpb_green_dark));
             currentData = DataSupport.where("t_id = ?", currentData.getT_id()).findFirst(DetailData.class);
         } catch (Exception e) {
-            LogToFileUtils.write(e.toString());
         }
     }
 

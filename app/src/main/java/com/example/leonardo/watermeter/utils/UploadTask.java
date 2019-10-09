@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.example.leonardo.watermeter.entity.DetailData;
 import com.example.leonardo.watermeter.entity.UploadTaskBean;
 import com.example.leonardo.watermeter.ui.MonthListViewActivity;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -73,7 +72,7 @@ public class UploadTask extends AsyncTask<Void, Integer, Boolean> {
             transport.call(soapAction, envelope);
         } catch (Exception e) {
             e.printStackTrace();
-            LogToFileUtils.write(e.toString());
+
         }
         // 获取返回的数据
         if (envelope.bodyIn instanceof SoapFault) {

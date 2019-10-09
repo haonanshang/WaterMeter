@@ -4,9 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.util.Log;
 
 
 import com.example.leonardo.watermeter.utils.ModifyImage;
+import com.objecteye.sy.wifibox.WBUtils;
 
 
 import java.io.File;
@@ -28,6 +30,7 @@ public class ICameraOperation {
     private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
     private boolean isCapture = false;
     private WBJNIActivity mWBJNIActivity;
+    private static String tag = "waterMeter";
 
     public ICameraOperation() {
 
@@ -49,7 +52,8 @@ public class ICameraOperation {
             public void run() {
                 isCapture = true;
                 while (isCapture) {
-                    byte[] frameData = mWBInterfaceJNI.getFrameData();
+                    //byte[] frameData = mWBInterfaceJNI.getFrameData();
+                    byte[] frameData = WBJNIUtils.getFrameData();
                     if (frameData != null && frameData.length > 0) {
                         Bitmap bmp = BitmapFactory.decodeByteArray(frameData, 0, frameData.length);
                         bmp = ModifyImage.rotateBitmapByDegree(bmp, 90);
@@ -66,6 +70,13 @@ public class ICameraOperation {
                                 resultMap.put("isExist", isExist);
                                 mWBJNIActivity.rebackShowActivity(resultMap);
                             }
+                        }
+                    } else {
+                        Log.i(tag,"ICameraOperation get data is null");
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     }
                 }

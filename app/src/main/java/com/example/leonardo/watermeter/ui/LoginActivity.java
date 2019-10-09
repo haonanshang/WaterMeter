@@ -18,7 +18,6 @@ import com.example.leonardo.watermeter.utils.GlobalVariables;
 import com.example.leonardo.watermeter.utils.NetWorkUtils;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 import com.example.leonardo.watermeter.utils.PhoneState;
-import com.objecteye.author.AuthorApplication;
 
 import java.io.BufferedReader;
 import java.io.IOException;

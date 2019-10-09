@@ -27,7 +27,6 @@ import android.widget.TextView;
 
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.DetailData;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 
 import org.litepal.crud.DataSupport;
 
@@ -118,7 +117,6 @@ public class TaskListActivity extends Activity {
         taskCountTextView = (TextView) findViewById(R.id.taskCount);
 
         //NOTICE 下面这个list数据要一直保存，作为元数据
-
         detailDataListOriginal = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ?", cbyf, bch).find(DetailData.class);
         detailDataListAll = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ?", cbyf, bch).find(DetailData.class);//这个列表用来作为存储用于当前显示的列表，并且当前所有的操作也是要基于这个列表的
         detailDataListNotYet = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and isChecked = ?", cbyf, bch, "1").find(DetailData.class);
@@ -153,7 +151,6 @@ public class TaskListActivity extends Activity {
             isonpause = false;
             initView();
             if (!whichPage.equals("002")) {
-                System.out.println("--------------------当前所处的位置为：" + pos);
                 if (subDetailDataList.size() > pos) {
                     if (pos <= 4) {
                         taskListView.setSelection(pos);//记录当前item的位置
@@ -162,7 +159,6 @@ public class TaskListActivity extends Activity {
                     }
                 }
             }
-            System.out.println("重要！回退测试-执行了");
         }
     }
 
@@ -245,9 +241,7 @@ public class TaskListActivity extends Activity {
                                 bundle.putString("bch", tempData.getT_volume_num());
                                 bundle.putString("tid", tempData.getT_id());
                                 bundle.putString("whichPage", whichPage);
-                                // bundle.putInt("taskPosition", Integer.valueOf(tempData.getT_volume_order()));
                                 intent.putExtras(bundle);
-                                System.out.println("检测-数据库-本条数据的id为：" + subDetailDataList.get(position).getT_id());
                                 startActivityForResult(intent, RequestCode);
                             }
                         });
@@ -263,9 +257,7 @@ public class TaskListActivity extends Activity {
                                 bundle.putString("bch", tempData.getT_volume_num());
                                 bundle.putString("tid", tempData.getT_id());
                                 bundle.putString("whichPage", whichPage);
-                                //bundle.putInt("taskPosition", Integer.valueOf(tempData.getT_volume_order()));
                                 intent.putExtras(bundle);
-                                System.out.println("检测-数据库-本条数据的id为：" + subDetailDataList.get(position).getT_id());
                                 startActivityForResult(intent, RequestCode);
                             }
                         });
@@ -278,15 +270,12 @@ public class TaskListActivity extends Activity {
                         bundle.putString("bch", tempData.getT_volume_num());
                         bundle.putString("tid", tempData.getT_id());
                         bundle.putString("whichPage", whichPage);
-                        // bundle.putInt("taskPosition", Integer.valueOf(tempData.getT_volume_order()));
                         intent.putExtras(bundle);
-                        System.out.println("检测-数据库-本条数据的id为：" + subDetailDataList.get(position).getT_id());
                         startActivityForResult(intent, RequestCode);
                     }
                 }
             });
         } catch (Exception e) {
-            LogToFileUtils.write(e.toString());
         }
     }
 

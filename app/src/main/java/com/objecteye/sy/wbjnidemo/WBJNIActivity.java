@@ -2,7 +2,6 @@ package com.objecteye.sy.wbjnidemo;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,13 +11,10 @@ import android.widget.Toast;
 
 import com.FireHydrant.ui.FireHydrantDataShowActivity;
 import com.example.leonardo.watermeter.R;
-import com.example.leonardo.watermeter.ui.TaskShowActivity;
-import com.example.leonardo.watermeter.ui.WifiActivity;
-import com.objecteye.sy.wifibox.WBUtils;
-import com.webview.WebviewActivity;
+import com.example.leonardo.watermeter.ui.TaskShowActivity;;
 
 import java.util.Map;
-import java.util.UUID;
+
 
 
 public class WBJNIActivity extends AppCompatActivity {

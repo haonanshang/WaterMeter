@@ -6,7 +6,6 @@ import com.FireHydrant.entity.FireHydrantDetailData;
 import com.FireHydrant.utils.UploadFireHyDrantTask;
 import com.example.leonardo.watermeter.entity.DetailData;
 import com.example.leonardo.watermeter.ui.MonthListViewActivity;
-import com.itgoyo.logtofilelibrary.LogToFileUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -56,7 +55,7 @@ public class UploadTaskNum extends AsyncTask<Void, Void, Integer> {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            LogToFileUtils.write(e.toString());
+
         }
         return 1;
     }

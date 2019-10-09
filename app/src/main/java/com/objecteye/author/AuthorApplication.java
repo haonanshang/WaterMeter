@@ -1,15 +1,17 @@
 package com.objecteye.author;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.MyApplication;
-import com.example.leonardo.watermeter.ui.MonthListViewActivity;
+
+import com.exception.CrashHandler;
+import com.itgoyo.logtofilelibrary.LogToFileUtils;
+import com.shuibiao.jni.MyApplication;
 import com.syteco.android.hardwareinfo.service.HeartBeatService;
+
 
 import org.litepal.LitePalApplication;
 
@@ -21,6 +23,7 @@ public class AuthorApplication extends LitePalApplication {
     private static Context context;
     private static String tag = "waterMeter";
     private final static Timer timer = new Timer();
+    private static TimerTask task = null;
     private static Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -32,8 +35,16 @@ public class AuthorApplication extends LitePalApplication {
                     /**
                      * 初始化JNI
                      */
-                    MyApplication.getInstance().getJniInterface();
+                    MyApplication.getInstance();
                     AuthorCustomUtils.dissmisAuthorProcess();
+                    task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            Log.i(tag, AuthorCustomUtils.getCurrentDate() + "check service running");
+                            HeartBeatService.getHearBeatService().HeartBeatFunc();
+                        }
+                    };
                     timer.schedule(task, 1000, 1000 * 60 * 5);
                     break;
                 case 1:
@@ -47,23 +58,18 @@ public class AuthorApplication extends LitePalApplication {
             }
         }
     };
-    /**
-     * 定时检测授权服务
-     */
-    private static TimerTask task = new TimerTask() {
-        @Override
-        public void run() {
-            // TODO Auto-generated method stub
-            Log.i(tag, AuthorCustomUtils.getCurrentDate() + "check service running");
-            com.syteco.android.hardwareinfo.service.HeartBeatService.getHearBeatService().HeartBeatFunc();
-        }
-    };
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
         HeartBeatService.getHearBeatService().setContext(context);
+        LogToFileUtils.init(context);
+//        // 异常处理，不需要处理时注释掉这两句即可！
+//        CrashHandler crashHandler = CrashHandler.getInstance();
+//        // 注册crashHandler
+//        crashHandler.init(getApplicationContext());
     }
 
     /**
@@ -85,7 +91,7 @@ public class AuthorApplication extends LitePalApplication {
                                 break;
                             } else {
                                 Log.i(tag, AuthorCustomUtils.getCurrentDate() + " Authorization is running");
-                                com.syteco.android.hardwareinfo.service.HeartBeatService.getHearBeatService().HeartBeatFunc();
+                                HeartBeatService.getHearBeatService().HeartBeatFunc();
                                 authorCount++;
                                 try {
                                     sleep(1000 * 5);
@@ -112,7 +118,9 @@ public class AuthorApplication extends LitePalApplication {
      * 关闭服务
      */
     public static void stopService() {
-        timer.cancel();
+        if (task != null) {
+            task.cancel();
+        }
     }
 
 }

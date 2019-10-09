@@ -12,7 +12,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 26
         versionCode 9
-        versionName "3.1.0"
+        versionName "3.1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -73,8 +73,8 @@ dependencies {
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如1.2.0
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-    implementation files('src\\main\\jniLibs\\sydp_1.0.3_release_20190730.aar')
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     implementation 'com.zhy:okhttputils:2.6.2'
+    implementation files('src\\main\\jniLibs\\sydp_1.0.3_release_20190822.aar')
 
 }
