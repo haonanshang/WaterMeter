@@ -84,7 +84,7 @@ public class AuthorApplication extends LitePalApplication {
                     super.run();
                     int authorCount = 0;
                     while (true) {
-                        if (authorCount < 10) {
+                        if (authorCount < 5) {
                             if (AuthorCustomUtils.CheckLicence()) {
                                 Log.i(tag, AuthorCustomUtils.getCurrentDate() + " Authorization success");
                                 handler.sendEmptyMessage(0);

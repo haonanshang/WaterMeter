@@ -32,7 +32,7 @@ public class ParseXml {
      * @throws IOException
      * @throws XmlPullParserException
      */
-    public static List getDetailData(InputStream is, String cbyf, String ladderPrice) throws IOException, XmlPullParserException {
+    public static List getDetailData(InputStream is, String cbyf, String ladderPrice,String waterMeterStateStr) throws IOException, XmlPullParserException {
         XmlPullParser xp = Xml.newPullParser();
         List<DetailData> detailDataList = new ArrayList<>();
         DetailData detailData = null;
@@ -52,6 +52,8 @@ public class ParseXml {
                             detailData.setT_cbyf(cbyf);//NOTICE 原数据没有这一项，添加方便查找
                             detailData.setT_isManual("1");
                             detailData.setAuto_detect_flag("2");
+                            //写入水表状态列表
+                             detailData.setWater_meter_state(waterMeterStateStr);
                             //写入水表阶梯水价
                             detailData.setLadder_price(ladderPrice);
                         } else if (xp.getName().equals("t_phone_imei")) {

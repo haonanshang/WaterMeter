@@ -28,6 +28,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.blueToothPrinter.BTCallbackInterface;
 import com.example.leonardo.watermeter.utils.CameraUtils;
 import com.example.leonardo.watermeter.utils.CommanUtils;
@@ -112,7 +114,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     //调用相机 保存文件路径
     private String imgTempFilePath = null;
 
-    final String[] meterStatus = {"正常", "关门", "表糊、碎、不准", "淹没", "杂物堆压", "单户表拆表销户", "水表找不到", "水表移位、升高、清理", "水表倒接、私接", "水表漏水修理", "表内漏水", "倒转", "表已拆", "需拆表", "已关阀"};
+    //final String[] meterStatus = {"正常", "关门", "表糊、碎、不准", "淹没", "杂物堆压", "单户表拆表销户", "水表找不到", "水表移位、升高、清理", "水表倒接、私接", "水表漏水修理", "表内漏水", "倒转", "表已拆", "需拆表", "已关阀"};
     private int[] boxLocationImgs = {
             R.drawable.dibiao,
             R.drawable.qiangbiao
@@ -641,17 +643,35 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     public void changeStatus(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(TaskShowActivity.this, android.R.style.Theme_Holo_Light_Dialog);
         builder.setTitle("请选择水表的状态");
+        final String[] meterStatus = parseWaterMeterState();
         builder.setItems(meterStatus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Log.e("waterMeter", "changeStatus -> which:" + which);
                 jblxStatus.setText(meterStatus[which]);
                 /*更新数据库中当前Task信息*/
                 ContentValues values = new ContentValues();
-                values.put("t_jblx", meterStatus[which]);
+                values.put("t_jblx", String.valueOf(which + 1));
                 DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
             }
         });
         builder.show();
+    }
+
+    /**
+     * 解析水表状态字符串
+     */
+    public String[] parseWaterMeterState() {
+        String waterMeterStateStr = currentData.getWater_meter_state();
+        //Log.e("waterMeter", "parseWaterMeterState -> waterMeterStateStr:" + waterMeterStateStr);
+        JSONArray waterStateArray = JSONObject.parseArray(waterMeterStateStr);
+        String[] meterStatus = new String[waterStateArray.size()];
+        for (int i = 0; i < waterStateArray.size(); i++) {
+            JSONObject object = waterStateArray.getJSONObject(i);
+            String name = object.getString("name");
+            meterStatus[i] = name;
+        }
+        return meterStatus;
     }
 
     /**

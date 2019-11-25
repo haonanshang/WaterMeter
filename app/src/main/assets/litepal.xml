@@ -2,7 +2,7 @@
 <litepal>
     <dbname value="wmdb"></dbname>
 
-    <version value="26"></version>
+    <version value="27"></version>
 
     <list>
         <mapping class="com.example.leonardo.watermeter.entity.BchData"></mapping>

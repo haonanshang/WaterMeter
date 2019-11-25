@@ -20,8 +20,11 @@ import java.net.ConnectException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by Leonardo on 2017/4/26.
@@ -163,16 +166,20 @@ public class DownloadData {
                         if (isFireHydrant) {
                             detailDataList = ParseXml.getFireHydrantDetailData(inputStream);
                         } else {
+                            //获取水表状态列表
+                            String userInfo = getUserInfo();
+                            JSONObject userInfoJson = (JSONObject) JSONObject.parseObject(userInfo);
+                            String waterMeterStateStr = userInfoJson.getJSONArray("water_meter_state").toString();
+                            //Log.e("waterMeter", "GetTaskData -> waterMeterStateStr:" + waterMeterStateStr);
                             //获取阶梯水价
                             String ladderJson = getLadderPrice();
-                            JSONObject.parseObject(ladderJson);
                             JSONObject jsonObject = (JSONObject) JSONObject.parseObject(ladderJson);
                             String resultCode = jsonObject.getString("result");
                             String ladder_price = null;
                             if (resultCode.equals("0")) {
                                 ladder_price = jsonObject.getJSONArray("ladder_price_config").toString();
                             }
-                            detailDataList = ParseXml.getDetailData(inputStream, cbyf, ladder_price);
+                            detailDataList = ParseXml.getDetailData(inputStream, cbyf, ladder_price, waterMeterStateStr);
                         }
                         if (detailDataList.size() > 0) {
                             Log.i(TAG, "download bch is " + bcList[i]);
@@ -232,6 +239,53 @@ public class DownloadData {
             }
             return result;
         }
+
+        /**
+         * 获取水表状态列表
+         *
+         * @return
+         */
+        public String getUserInfo() {
+            String ladderPricePath = "http://" + new SharedPreUtils().GetIp(mContext) + "/services/phone/getUserInfo";
+            String result = null;
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject json = new JSONObject();
+            json.put("imei", imei);
+            RequestBody requestBody = RequestBody.create(JSON, String.valueOf(json));
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request
+                    .Builder()
+                    .post(requestBody)
+                    .url(ladderPricePath)
+                    .build();
+            InputStream inputStream = null;
+            try {
+                okhttp3.Response response = client.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    inputStream = response.body().byteStream();
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = inputStream.read(buffer)) != -1) {
+                        bos.write(buffer, 0, length);
+                    }
+                    result = bos.toString(StandardCharsets.UTF_8.name());
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (inputStream != null) {
+                    try {
+                        inputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return result;
+        }
+
 
         @Override
         protected void onPostExecute(String s) {

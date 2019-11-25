@@ -153,18 +153,23 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                                 values.put("modify_detect_num", mDetaiData.getT_cur_meter_data());
                             }
                             DataSupport.updateAll(DetailData.class, values, "t_id = ?", mDetaiData.getT_id());
-                            if (!QuantityCalculationUtils.WaterEstimat(mDetaiData.getT_average(), String.valueOf(currentReadWaterSum))) {
-                                Result = Result + "本月用水量超过平均值";
-                            }
-                            if (SharedPreUtils.getReminderDialogStatus(mActivity)) {
-                                CommanUtils.showReminderDialog(mActivity, Result);
-                            } else {
-                                Toast.makeText(mActivity, Result, Toast.LENGTH_SHORT).show();
-                            }
-                            this.dismiss();
-                            mActivity.changeTask();
-                            if (GlobalData.setAutoJump) {
-                                mActivity.moveToMethod(9);
+                            try {
+                                if (!QuantityCalculationUtils.WaterEstimat(mDetaiData.getT_average(), String.valueOf(currentReadWaterSum))) {
+                                    Result = "本月用水量超过平均值";
+                                }
+                                if (SharedPreUtils.getReminderDialogStatus(mActivity)) {
+                                    CommanUtils.showReminderDialog(mActivity, Result);
+                                } else {
+                                    Toast.makeText(mActivity, Result, Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                LogToFileUtils.write(e.toString());
+                            } finally {
+                                this.dismiss();
+                                mActivity.changeTask();
+                                if (GlobalData.setAutoJump) {
+                                    mActivity.moveToMethod(9);
+                                }
                             }
                         } else {
                             if (SharedPreUtils.getReminderDialogStatus(mActivity)) {
@@ -173,12 +178,17 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                                 Toast.makeText(mActivity, "当前手抄读数有误，请检查水表是否更换，若无更换，手抄读数要大于上期读数，若更换，请联系相关人员", Toast.LENGTH_SHORT).show();
                             }
                         }
-
                     } else {
                         Toast.makeText(mActivity, "当前手抄读数不能为空", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     LogToFileUtils.write(e.toString());
+                    if (SharedPreUtils.getReminderDialogStatus(mActivity)) {
+                        CommanUtils.showReminderDialog(mActivity, "表册数据异常，请联系相关人员");
+                    } else {
+                        Toast.makeText(mActivity, "表册数据异常，请联系相关人员", Toast.LENGTH_SHORT).show();
+                    }
+                    this.dismiss();
                 }
                 break;
         }

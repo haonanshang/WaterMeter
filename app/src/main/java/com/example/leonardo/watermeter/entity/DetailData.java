@@ -64,6 +64,15 @@ public class DetailData extends DataSupport {
     private String owner_name;//抄表员 表册绑定的抄表员
     private String detail_date_list;// 当前所有已超月份列表 ，分割
     private String used_value_list;//已超月份水量的使用情况  对应月份列表
+    private String water_meter_state; //水表状态列表
+
+    public String getWater_meter_state() {
+        return water_meter_state;
+    }
+
+    public void setWater_meter_state(String water_meter_state) {
+        this.water_meter_state = water_meter_state;
+    }
 
     public String getBalance() {
         return balance;
