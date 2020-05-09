@@ -35,6 +35,7 @@ import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.BchData;
 import com.example.leonardo.watermeter.entity.DetailData;
 import com.example.leonardo.watermeter.interfaces.UploadTaskInterface;
+import com.example.leonardo.watermeter.utils.DialogUtils;
 import com.example.leonardo.watermeter.utils.DownloadData;
 import com.example.leonardo.watermeter.utils.GlobalVariables;
 import com.example.leonardo.watermeter.utils.Month;
@@ -42,14 +43,17 @@ import com.example.leonardo.watermeter.utils.NetWorkUtils;
 import com.example.leonardo.watermeter.utils.PhoneState;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 import com.example.leonardo.watermeter.utils.UploadTaskNum;
+import com.extended.BcSettingActivity;
 import com.extended.CancelUploadMessageActiviy;
 import com.extended.CustomYearDialog;
 import com.extended.DownLoadMessageActiviy;
 import com.extended.OtherSettingActivity;
 import com.objecteye.author.AuthorApplication;
+import com.prosdk.BindingDeviceActivity;
 import com.tencent.bugly.Bugly;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +62,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 
-import static org.litepal.crud.DataSupport.where;
 
 public class MonthListViewActivity extends Activity implements UploadTaskInterface {
     Context mContext;
@@ -75,6 +78,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
     final String[] months = {"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
     final String[] monthsInt = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
     final String[] years = {"2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027"};
+    final String[] deviceArray = {"外接盒子-1", "外接盒子-2", "外接盒子-3"};
     TreeSet<String> uploadmonthSet = new TreeSet<>();
     String yearString = "";
     private ProgressDialog downloadDialog;
@@ -82,7 +86,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
     private SharedPreferences.Editor editor;
     private ListView menulistview;
     private DrawerLayout main_drawerlayout;
-    private TextView dataType, deviceType;// 数据分为普通数据和消防栓数据 设备支持外接设备—1 外接设备2
+    private TextView dataType;// 数据分为普通数据和消防栓数据 设备支持外接设备—1 外接设备2
     private TextView showYearTV;
     private String updataYearString = null;//保存将要更新的年份
     private TextView showVersion;
@@ -93,7 +97,8 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Bugly.init(getApplicationContext(), "ae502d00f2", false);
+        //自动更新buggly
+        //Bugly.init(getApplicationContext(), "ae502d00f2", false);
         setContentView(R.layout.act_month_drawerlayout);
         initShapre();
         initView();
@@ -165,19 +170,27 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
                     case 5://切换年份
                         new CustomYearDialog(MonthListViewActivity.this).showDialog();
                         break;
-                    case 6://外接设备切换
-                        int Type = SharedPreUtils.getDeviceType(MonthListViewActivity.this);
-                        String str = Type == 2 ? "外接盒子-1" : "外接盒子-2";
-                        deviceType.setText(str);
-                        int updateType = Type == 2 ? 1 : 2;
-                        SharedPreUtils.setDeviceType(MonthListViewActivity.this, updateType);
+                    case 6://外接设备选择
+                        int selectDeviceType = SharedPreUtils.getDeviceType(MonthListViewActivity.this);
+                        DialogUtils.singleChoices(MonthListViewActivity.this, deviceArray, selectDeviceType);
                         main_drawerlayout.closeDrawer(Gravity.LEFT);
                         break;
-                    case 7://其他设置
+                    case 7://表册设置
+                        Intent bcSettingIntent = new Intent(MonthListViewActivity.this, BcSettingActivity.class);
+                        startActivity(bcSettingIntent);
+                        main_drawerlayout.closeDrawer(Gravity.LEFT);
+                        break;
+                    case 8: //设备绑定
+                        Intent bindingDeviceIntent = new Intent(MonthListViewActivity.this, BindingDeviceActivity.class);
+                        startActivity(bindingDeviceIntent);
+                        main_drawerlayout.closeDrawer(Gravity.LEFT);
+                        break;
+                    case 9://其他设置
                         Intent otherSettingIntent = new Intent(MonthListViewActivity.this, OtherSettingActivity.class);
                         startActivity(otherSettingIntent);
                         main_drawerlayout.closeDrawer(Gravity.LEFT);
                         break;
+
                     default:
                         Toast.makeText(MonthListViewActivity.this, "该功能暂未开放", Toast.LENGTH_SHORT).show();
                         break;
@@ -229,7 +242,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
                 tvMonth.setText(Arrays.asList(months).get(position));
                 //判断是正常水司还是消防栓水司
                 if (SharedPreUtils.getDataType(MonthListViewActivity.this)) {
-                    if (!where("cbyf = ?", yearString + monthsInt[position]).find(FireHydrantBchData.class).isEmpty()) {
+                    if (!LitePal.where("cbyf = ?", yearString + monthsInt[position]).find(FireHydrantBchData.class).isEmpty()) {
                         IsUploadText.setText("已下载");
                         IsUploadText.setTextColor(Color.parseColor("#0000ff"));
                         uploadmonthSet.add(monthsInt[position]);
@@ -237,7 +250,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
                         IsUploadText.setText("");
                     }
                 } else {
-                    if (!where("cbyf = ?", yearString + monthsInt[position]).find(BchData.class).isEmpty()) {
+                    if (!LitePal.where("cbyf = ?", yearString + monthsInt[position]).find(BchData.class).isEmpty()) {
                         IsUploadText.setText("已下载");
                         IsUploadText.setTextColor(Color.parseColor("#0000ff"));
                         uploadmonthSet.add(monthsInt[position]);
@@ -255,11 +268,11 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
                 tvMonth = (TextView) view.findViewById(R.id.contentListRight);
                 boolean dataIsEmpty = true;
                 if (SharedPreUtils.getDataType(MonthListViewActivity.this)) {
-                    if (!where("cbyf = ?", yearString + monthsInt[position]).find(FireHydrantBchData.class).isEmpty()) {
+                    if (!LitePal.where("cbyf = ?", yearString + monthsInt[position]).find(FireHydrantBchData.class).isEmpty()) {
                         dataIsEmpty = false;
                     }
                 } else {
-                    if (!where("cbyf = ?", yearString + monthsInt[position]).find(BchData.class).isEmpty()) {
+                    if (!LitePal.where("cbyf = ?", yearString + monthsInt[position]).find(BchData.class).isEmpty()) {
                         dataIsEmpty = false;
                     }
                 }
@@ -289,15 +302,11 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
             e.printStackTrace();
         }
         dataType = (TextView) findViewById(R.id.DataType);
-        deviceType = findViewById(R.id.deviceType);
         if (SharedPreUtils.getDataType(this)) {
             dataType.setText("消防栓数据");
         } else {
             dataType.setText("普通数据");
         }
-        int Type = SharedPreUtils.getDeviceType(MonthListViewActivity.this);
-        String str = Type == 1 ? "外接盒子-1" : "外接盒子-2";
-        deviceType.setText(str);
         showIMEI = (TextView) findViewById(R.id.showIMEI);
         downloadData = new DownloadData();
         imei = PhoneState.getDeviceId(this);
@@ -373,26 +382,26 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
                 if (choosemonthlist.size() != 0) {
                     if (isFireHydrant) {//消防栓
                         for (int i = 0; i < choosemonthlist.size(); i++) {
-                            if (DataSupport.where("cbyf = ?", choosemonthlist.get(i)).find(FireHydrantBchData.class).isEmpty()) {
+                            if (LitePal.where("cbyf = ?", choosemonthlist.get(i)).find(FireHydrantBchData.class).isEmpty()) {
                                 dialog.dismiss();
                                 Toast.makeText(getApplicationContext(), choosemonthlist.get(i) + "份表冊未下载，请下载表册号再上传数据", Toast.LENGTH_SHORT).show();
                                 choosemonthlist.clear();
                                 numberForUpload = 0;
                                 FireHydrantDataListForUpload.clear();
                             } else {
-                                numberForUpload += where("isChecked = '0'and isUpload = '1'and detail_date=?", choosemonthlist.get(i)).count(FireHydrantDetailData.class);
+                                numberForUpload += LitePal.where("isChecked = '0'and isUpload = '1'and detail_date=?", choosemonthlist.get(i)).count(FireHydrantDetailData.class);
                             }
                         }
                     } else { // 普通水司
                         for (int i = 0; i < choosemonthlist.size(); i++) {
-                            if (DataSupport.where("cbyf = ?", choosemonthlist.get(i)).find(BchData.class).isEmpty()) {
+                            if (LitePal.where("cbyf = ?", choosemonthlist.get(i)).find(BchData.class).isEmpty()) {
                                 dialog.dismiss();
                                 Toast.makeText(getApplicationContext(), choosemonthlist.get(i) + "份表冊未下载，请下载表册号再上传数据", Toast.LENGTH_SHORT).show();
                                 choosemonthlist.clear();
                                 numberForUpload = 0;
                                 dataListForUpload.clear();
                             } else {
-                                numberForUpload += where("isChecked = '0'and isUpload = '1'and t_cbyf=?", choosemonthlist.get(i)).count(DetailData.class);
+                                numberForUpload += LitePal.where("isChecked = '0'and isUpload = '1'and t_cbyf=?", choosemonthlist.get(i)).count(DetailData.class);
                             }
                         }
 
@@ -412,7 +421,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
                                     if (isFireHydrant) {
                                         //NOTICE  找出拍了照片而且没有上传的
                                         for (int i = 0; i < choosemonthlist.size(); i++) {
-                                            List<FireHydrantDetailData> datalist = DataSupport.where("isChecked = '0' and isUpload = '1'and detail_date=?", choosemonthlist.get(i)).find(FireHydrantDetailData.class);
+                                            List<FireHydrantDetailData> datalist = LitePal.where("isChecked = '0' and isUpload = '1'and detail_date=?", choosemonthlist.get(i)).find(FireHydrantDetailData.class);
                                             for (int j = 0; j < datalist.size(); j++) {
                                                 FireHydrantDataListForUpload.add(datalist.get(j));
                                             }
@@ -424,7 +433,7 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
                                         new UploadTaskNum(FireHydrantDataListForUpload, MonthListViewActivity.this, isFireHydrant).execute();
                                     } else {//普通水司的
                                         for (int i = 0; i < choosemonthlist.size(); i++) {
-                                            List<DetailData> datalist = DataSupport.where("isChecked = '0' and isUpload = '1'and t_cbyf=?", choosemonthlist.get(i)).find(DetailData.class);
+                                            List<DetailData> datalist = LitePal.where("isChecked = '0' and isUpload = '1'and t_cbyf=?", choosemonthlist.get(i)).find(DetailData.class);
                                             for (int j = 0; j < datalist.size(); j++) {
                                                 dataListForUpload.add(datalist.get(j));
                                             }
@@ -508,7 +517,6 @@ public class MonthListViewActivity extends Activity implements UploadTaskInterfa
             }
         });
         builder.show();
-
     }
 
     /**

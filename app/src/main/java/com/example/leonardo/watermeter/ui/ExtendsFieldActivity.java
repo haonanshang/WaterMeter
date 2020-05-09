@@ -22,7 +22,7 @@ import com.example.leonardo.watermeter.entity.DetailData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -91,7 +91,7 @@ public class ExtendsFieldActivity extends Activity {
      * 初始化
      */
     private void initDatas() {
-        currentData = DataSupport.where("t_id = ?", tid).findFirst(DetailData.class);
+        currentData = LitePal.where("t_id = ?", tid).findFirst(DetailData.class);
 
     }
 
@@ -105,11 +105,11 @@ public class ExtendsFieldActivity extends Activity {
                 if (b) {
                     ContentValues values = new ContentValues();
                     values.put("t_normal_detect", "false");
-                    DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                    LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
                 } else {
                     ContentValues values = new ContentValues();
                     values.put("t_normal_detect", "true");
-                    DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                    LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
                 }
             }
         });

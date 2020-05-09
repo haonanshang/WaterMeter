@@ -72,13 +72,11 @@ public class  ModifyImage {
      * 图片按比例大小压缩
      */
 
-
-    public static Bitmap getimage(String srcPath, String cardname, int degree) {
+    public static Bitmap getimage(String srcPath, String cardname, int degree,int size) {
         //读取图片的旋转角度，并进行旋转
-
         Bitmap bitmap = BitmapFactory.decodeFile(srcPath);
         bitmap = rotateBitmapByDegree(bitmap, degree);
-        return drawTextToBitmap(srcPath, bitmap, cardname, (bitmap.getHeight() / 22));//加入水印;
+        return drawTextToBitmap(srcPath, bitmap, cardname, (bitmap.getHeight() / size));//加入水印;
     }
 
 

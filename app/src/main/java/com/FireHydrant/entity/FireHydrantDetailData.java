@@ -1,11 +1,11 @@
 package com.FireHydrant.entity;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
 /*
  *消防栓表册具体数据
  */
-public class FireHydrantDetailData extends DataSupport {
+public class FireHydrantDetailData extends LitePalSupport {
     private String record_key_detail;//任务记录id,作为唯一的id使用 上传的时候按原图返回
     private String record_key_list;//消防栓记录id,作为唯一的id使用，上传的时候按原图返回
     private String fire_hydrant_id;//消防栓ID

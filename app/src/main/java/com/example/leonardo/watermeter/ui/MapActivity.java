@@ -36,7 +36,8 @@ import com.baidu.mapapi.model.LatLng;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.DetailData;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
+
 
 /**
  * 此demo用来展示如何结合定位SDK实现定位，并使用MyLocationOverlay绘制定位位置 同时展示如何使用自定义图标绘制并点击时弹出泡泡
@@ -78,7 +79,7 @@ public class MapActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_map);
         Bundle bundle = this.getIntent().getExtras();
         tid = bundle.getString("tid");
-        currentData = DataSupport.where("t_id = ?", tid).findFirst(DetailData.class);
+        currentData = LitePal.where("t_id = ?", tid).findFirst(DetailData.class);
         if (Build.VERSION.SDK_INT >= 23) {
             showContacts();
         } else {
@@ -103,7 +104,7 @@ public class MapActivity extends Activity implements SensorEventListener {
         values.put("t_x", mCurrentLat + "");
         values.put("t_y", mCurrentLon + "");
         System.out.println("定位到的位置为x纬度:" + mCurrentLat + " y经度:" + mCurrentLon);
-        DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+        LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
         if (!currentData.getT_x().equals("0.0") && !currentData.getT_y().equals("0.0") && !currentData.getT_x().equals("4.9E-324") && !currentData.getT_y().equals("4.9E-324")) {
             Toast.makeText(MapActivity.this, "定位成功", Toast.LENGTH_SHORT).show();
         } else {

@@ -2,12 +2,13 @@
 <litepal>
     <dbname value="wmdb"></dbname>
 
-    <version value="27"></version>
-
     <list>
         <mapping class="com.example.leonardo.watermeter.entity.BchData"></mapping>
         <mapping class="com.example.leonardo.watermeter.entity.DetailData"></mapping>
+        <mapping class="com.example.leonardo.watermeter.entity.DetailDivideData"></mapping>
         <mapping class="com.FireHydrant.entity.FireHydrantBchData"></mapping>
         <mapping class="com.FireHydrant.entity.FireHydrantDetailData"></mapping>
     </list>
+
+    <version value="28"></version>
 </litepal>

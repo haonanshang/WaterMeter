@@ -1,9 +1,13 @@
 package com.example.leonardo.watermeter.entity;
 
+import android.support.annotation.NonNull;
+
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 水量bean
  */
-public class WaterYieldBean {
+public class WaterYieldBean implements Comparable<WaterYieldBean> {
     String waterYield;//用水量
     String waterDate;//水量月份
 
@@ -26,5 +30,14 @@ public class WaterYieldBean {
 
     public void setWaterDate(String waterDate) {
         this.waterDate = waterDate;
+    }
+
+    @Override
+    public int compareTo(@NonNull WaterYieldBean waterYieldBean) {
+        if (StringUtils.isEmpty(waterDate) || StringUtils.isEmpty(waterYieldBean.getWaterDate())) {
+            return -1;
+        } else {
+            return waterDate.compareTo(waterYieldBean.getWaterDate());
+        }
     }
 }

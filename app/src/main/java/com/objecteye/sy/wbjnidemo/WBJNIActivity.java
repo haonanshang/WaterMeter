@@ -36,7 +36,6 @@ public class WBJNIActivity extends AppCompatActivity {
         isFireHydrant = bundle.getBoolean("isFireHydrant");
         initViews();
         boolean status = checkBoxStatus();
-        Log.i("status", status + "");
         if (status) {
             mICameraOperation.startCapture();
         } else {

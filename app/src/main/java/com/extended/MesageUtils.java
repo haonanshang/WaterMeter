@@ -4,7 +4,8 @@ import android.content.ContentValues;
 
 import com.example.leonardo.watermeter.entity.DetailData;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.net.DatagramSocket;
 import java.util.Comparator;
@@ -21,8 +22,8 @@ public class MesageUtils {
         boolean result = false;
         ContentValues values = new ContentValues();
         values.put("isUpload", "1");
-        DataSupport.updateAll(DetailData.class, values, " t_cbyf = ? and t_volume_num = ?", month, statisTicalForms);
-        List<DetailData> datas = DataSupport.where(" t_cbyf = ? and t_volume_num = ? and isUpload= ?", month, statisTicalForms, "0").find(DetailData.class);
+        LitePal.updateAll(DetailData.class, values, " t_cbyf = ? and t_volume_num = ?", month, statisTicalForms);
+        List<DetailData> datas = LitePal.where(" t_cbyf = ? and t_volume_num = ? and isUpload= ?", month, statisTicalForms, "0").find(DetailData.class);
         if (datas.size() > 0) {
             result = false;
         } else {
@@ -35,7 +36,7 @@ public class MesageUtils {
      *根据月份 表册号 查找已经拍照但是未上传的数据
      */
     public static List<DetailData> getDetaiDataListByFields(String month, String statisTicalForms) {
-        return DataSupport.where(" t_cbyf = ? and t_volume_num = ? and isUpload= ? and isChecked=?", month, statisTicalForms, "1", "0").find(DetailData.class);
+        return LitePal.where(" t_cbyf = ? and t_volume_num = ? and isUpload= ? and isChecked=?", month, statisTicalForms, "1", "0").find(DetailData.class);
     }
 
     /*

@@ -1,11 +1,11 @@
 package com.example.leonardo.watermeter.utils;
 
-import android.util.Log;
 import android.util.Xml;
 
-import com.FireHydrant.entity.FireHydrantBchData;
 import com.FireHydrant.entity.FireHydrantDetailData;
 import com.example.leonardo.watermeter.entity.DetailData;
+import com.example.leonardo.watermeter.entity.DetailDivideData;
+import com.example.leonardo.watermeter.global.GlobalData;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -27,15 +27,20 @@ public class ParseXml {
      *
      * @param is          表册信息读流
      * @param cbyf        抄表月份
+     * @param bch         表册号
      * @param ladderPrice 水表阶梯水价字符串
+     * @param waterMeterStateStr
+     * @param divideNumLimit
      * @return
      * @throws IOException
      * @throws XmlPullParserException
      */
-    public static List getDetailData(InputStream is, String cbyf, String ladderPrice,String waterMeterStateStr) throws IOException, XmlPullParserException {
+    public static List getDetailData(InputStream is, String cbyf, String bch, String ladderPrice, String waterMeterStateStr,int divideNumLimit) throws IOException, XmlPullParserException {
         XmlPullParser xp = Xml.newPullParser();
         List<DetailData> detailDataList = new ArrayList<>();
         DetailData detailData = null;
+        int divideNumber = 1; //分库序号
+        int divideTotalCount = 0;//分库数量
         xp.setInput(is, "utf-8");
         int type = xp.getEventType();
         try {
@@ -53,7 +58,7 @@ public class ParseXml {
                             detailData.setT_isManual("1");
                             detailData.setAuto_detect_flag("2");
                             //写入水表状态列表
-                             detailData.setWater_meter_state(waterMeterStateStr);
+                            detailData.setWater_meter_state(waterMeterStateStr);
                             //写入水表阶梯水价
                             detailData.setLadder_price(ladderPrice);
                         } else if (xp.getName().equals("t_phone_imei")) {
@@ -159,6 +164,12 @@ public class ParseXml {
                     case XmlPullParser.END_TAG:
                         if (xp.getName().equals("Table")) {
                             detailDataList.add(detailData);
+                            divideTotalCount++;
+                            if (divideTotalCount > divideNumLimit) {
+                                divideNumber++;
+                                divideTotalCount = 1;
+                            }
+                            detailData.setDivideNumber(String.valueOf(divideNumber));
                             System.out.println("测试-给list写入了一个对象");
                         }
                         break;
@@ -166,13 +177,19 @@ public class ParseXml {
                         break;
                 }
                 type = xp.next();//解析完当前节点后，把指针移动至下一个节点，并返回它的事件类型
-                Log.e("sy", "返回的节点类型为：" + type);
             }
         } catch (XmlPullParserException e) {
             e.printStackTrace();
-
         }
         System.out.println("重要！-解析的时候，detailDataList第一条数据的id为：" + detailDataList.get(0).getT_id());
+        //存储逻辑分表信息
+        for (int i = 1; i <= divideNumber; i++) {
+            DetailDivideData detailDivideData = new DetailDivideData();
+            detailDivideData.setCbyf(cbyf);
+            detailDivideData.setBch(bch);
+            detailDivideData.setDivideNumber(String.valueOf(i));
+            detailDivideData.save();
+        }
         return detailDataList;
     }
 

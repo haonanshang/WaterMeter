@@ -20,23 +20,24 @@ import android.widget.Toast;
 import com.FireHydrant.entity.FireHydrantBchData;
 import com.FireHydrant.entity.FireHydrantDetailData;
 import com.FireHydrant.ui.FireHydrantTaskListActivity;
+import com.blueToothPrinter.DeviceListActivity;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.BchData;
 import com.example.leonardo.watermeter.entity.DetailData;
+import com.example.leonardo.watermeter.entity.DetailDivideData;
 import com.example.leonardo.watermeter.entity.SortDataBean;
 import com.example.leonardo.watermeter.global.GlobalData;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class BCListViewActivity extends Activity {
     private BaseAdapter baseAdapter;
@@ -73,9 +74,9 @@ public class BCListViewActivity extends Activity {
         monthDone = (TextView) findViewById(R.id.monthDone);
         updateTip();
         if (SharedPreUtils.getDataType(this)) {
-            fireHydrantBchDataList = DataSupport.where("cbyf = ?", cbyfString).find(FireHydrantBchData.class);
+            fireHydrantBchDataList = LitePal.where("cbyf = ?", cbyfString).find(FireHydrantBchData.class);
         } else {
-            bchDataList = DataSupport.where("cbyf = ?", cbyfString).find(BchData.class);
+            bchDataList = LitePal.where("cbyf = ?", cbyfString).find(BchData.class);
         }
         showtreeset();
         /*以下是List View部分*/
@@ -132,7 +133,7 @@ public class BCListViewActivity extends Activity {
                             }
                             ContentValues values = new ContentValues();
                             values.put("isDetectByPhone", isDetectFlag);
-                            DataSupport.updateAll(BchData.class, values, "cbyf= ? and bch= ?", cbyfString, sortDataBean.getBch());
+                            LitePal.updateAll(BchData.class, values, "cbyf= ? and bch= ?", cbyfString, sortDataBean.getBch());
                             sortList.get(position).setIsDetectByPhone(isDetectFlag);
                         }
                     });
@@ -152,23 +153,19 @@ public class BCListViewActivity extends Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //判断是消防栓还是普通水司
                 try {
-                    List detailDataList;
-                    Intent intent;
+                    Intent intent = new Intent(BCListViewActivity.this, DivideBClistViewActivity.class);
                     if (SharedPreUtils.getDataType(BCListViewActivity.this)) {
-                        detailDataList = DataSupport.where("detail_date = ? and booklet_no= ?", cbyfString, bchTextView.getText().toString()).find(FireHydrantDetailData.class);
-                        intent = new Intent(BCListViewActivity.this, FireHydrantTaskListActivity.class);
+                        Toast.makeText(BCListViewActivity.this, "暂不支持消防表册功能", Toast.LENGTH_SHORT).show();
                     } else {
-                        detailDataList = DataSupport.where("t_cbyf = ? and t_volume_num = ?", cbyfString, bchTextView.getText().toString()).find(DetailData.class);
-                        intent = new Intent(BCListViewActivity.this, TaskListActivity.class);
-                    }
-                    if (!detailDataList.isEmpty()) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("cbyf", cbyfString);
-                        bundle.putString("bch", sortList.get(i).getBch());
-                        intent.putExtras(bundle);
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(BCListViewActivity.this, "没有数据，请返回上一级重新下载", Toast.LENGTH_SHORT).show();
+                        if (monthAllNumber > 0) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("cbyf", cbyfString);
+                            bundle.putString("bch", sortList.get(i).getBch());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(BCListViewActivity.this, "没有数据，请返回上一级重新下载", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 } catch (Exception e) {
                 }
@@ -223,13 +220,13 @@ public class BCListViewActivity extends Activity {
     private void updateTip() {
         //判断是普通水司还是消防栓水司
         if (SharedPreUtils.getDataType(this)) {
-            monthAllNumber = DataSupport.where("detail_date = ?", cbyfString).count(FireHydrantDetailData.class);
-            monthDoneNumber = DataSupport.where("detail_date = ? and isChecked = ?", cbyfString, "0").count(FireHydrantDetailData.class);
-            monthNotNumber = DataSupport.where("detail_date = ? and isChecked = ?", cbyfString, "1").count(FireHydrantDetailData.class);
+            monthAllNumber = LitePal.where("detail_date = ?", cbyfString).count(FireHydrantDetailData.class);
+            monthDoneNumber = LitePal.where("detail_date = ? and isChecked = ?", cbyfString, "0").count(FireHydrantDetailData.class);
+            monthNotNumber = LitePal.where("detail_date = ? and isChecked = ?", cbyfString, "1").count(FireHydrantDetailData.class);
         } else {
-            monthAllNumber = DataSupport.where("t_cbyf = ?", cbyfString).count(DetailData.class);
-            monthDoneNumber = DataSupport.where("t_cbyf = ? and isChecked = ?", cbyfString, "0").count(DetailData.class);
-            monthNotNumber = DataSupport.where("t_cbyf = ? and isChecked = ?", cbyfString, "1").count(DetailData.class);
+            monthAllNumber = LitePal.where("t_cbyf = ?", cbyfString).count(DetailData.class);
+            monthDoneNumber = LitePal.where("t_cbyf = ? and isChecked = ?", cbyfString, "0").count(DetailData.class);
+            monthNotNumber = LitePal.where("t_cbyf = ? and isChecked = ?", cbyfString, "1").count(DetailData.class);
         }
         monthAll.setText("全部数据:" + monthAllNumber);
         monthNot.setText("未抄数据:" + monthNotNumber);
@@ -242,5 +239,6 @@ public class BCListViewActivity extends Activity {
         GlobalData.setAutoJump = false;
         updateTip();
     }
+
 
 }

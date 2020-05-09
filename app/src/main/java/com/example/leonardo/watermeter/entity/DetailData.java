@@ -1,12 +1,12 @@
 package com.example.leonardo.watermeter.entity;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
 /**
  * Created by Leonardo on 2017/5/2.
  */
 
-public class DetailData extends DataSupport {
+public class DetailData extends LitePalSupport {
     private int id;
     private String t_id;//任务ID
     private String t_phone_imei;//手机IMEI号码
@@ -62,12 +62,21 @@ public class DetailData extends DataSupport {
     private String ladder_price;//水表阶梯水价
     private String balance;//账户余额
     private String owner_name;//抄表员 表册绑定的抄表员
-    private String detail_date_list;// 当前所有已超月份列表 ，分割
+    private String detail_date_list;// 当前所有已抄月份列表 ，分割
     private String used_value_list;//已超月份水量的使用情况  对应月份列表
     private String water_meter_state; //水表状态列表
+    private String divideNumber; //划分序号 (分库) 手机端分库 区分大表册
 
     public String getWater_meter_state() {
         return water_meter_state;
+    }
+
+    public String getDivideNumber() {
+        return divideNumber;
+    }
+
+    public void setDivideNumber(String divideNumber) {
+        this.divideNumber = divideNumber;
     }
 
     public void setWater_meter_state(String water_meter_state) {

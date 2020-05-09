@@ -14,7 +14,7 @@ import com.example.leonardo.watermeter.utils.SharedPreUtils;
 import com.example.leonardo.watermeter.utils.JsonDataUtils;
 
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -89,7 +89,7 @@ public class UploadFireHyDrantTask extends AsyncTask<Void, Integer, Boolean> {
                         for (FireHydrantDetailData currentData : uploadCurrentList) {
                             ContentValues values = new ContentValues();
                             values.put("isUpload", "0");
-                            DataSupport.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id= ?", currentData.getFire_hydrant_id());
+                            LitePal.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id= ?", currentData.getFire_hydrant_id());
                             CurrentUploadIndex += 1;
                         }
                     }

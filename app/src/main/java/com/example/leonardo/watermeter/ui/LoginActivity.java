@@ -61,7 +61,6 @@ public class LoginActivity extends Activity {
     }
 
     public void loginInit() {
-
         IMEI_number = PhoneState.getDeviceId(getApplicationContext());
         textIMEI = (TextView) findViewById(R.id.text_IMEI);
         textIMEI.setText("当前设备串号为：" + IMEI_number);

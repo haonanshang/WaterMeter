@@ -12,7 +12,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,19 +27,20 @@ import android.widget.TextView;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.DetailData;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskListActivity extends Activity {
-    private String cbyf, bch;
+    private String cbyf, bch, divideNumber;
     private String whichPage = "001";
     private ListView taskListView;
     private BaseAdapter baseAdapter;
     private EditText searchE;
     private ImageView clearSearch;
-    private List<DetailData> detailDataListAll, detailDataListNotYet, detailDataListDone, detailDataListOriginal;
+    private List<DetailData> detailDataListAll, detailDataListNotYet, detailDataListDone;
     private List<DetailData> subDetailDataList;
     private TextView taskIDTextView, cardNumberTextView, ticketNameTextView, locationTextView, isCheckedTextView, taskCountTextView, meterNumberTextView;
     Handler myHandler = new Handler();
@@ -56,38 +56,25 @@ public class TaskListActivity extends Activity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     subDetailDataList.clear();
-                    for (int i = 0; i < detailDataListOriginal.size(); i++) {
-                        subDetailDataList.add(detailDataListOriginal.get(i));
-                    }
                     whichPage = "001";
-                    updateData(whichPage);
+                    updateData();
                     updateTipInfo();
                     setListViewAdapter();
-                    //myHandler.post(changeList);//触发更新线程
                     return true;
                 case R.id.navigation_dashboard:
                     subDetailDataList.clear();
-                    for (int i = 0; i < detailDataListNotYet.size(); i++) {
-                        subDetailDataList.add(detailDataListNotYet.get(i));
-                    }
                     whichPage = "002";
-                    updateData(whichPage);
+                    updateData();
                     updateTipInfo();
                     setListViewAdapter();
-                    System.out.println("数据库-尚未抄表数量：" + detailDataListNotYet.size());
-                    //myHandler.post(changeList);//触发更新线程
                     return true;
                 case R.id.navigation_notifications:
                     subDetailDataList.clear();
-                    for (int i = 0; i < detailDataListDone.size(); i++) {
-                        subDetailDataList.add(detailDataListDone.get(i));
-                    }
                     whichPage = "003";
-                    updateData(whichPage);
+                    updateData();
                     updateTipInfo();
                     setListViewAdapter();
                     System.out.println("数据库-已经抄表数量：" + detailDataListDone.size());
-                    //myHandler.post(changeList);//触发更新线程
                     return true;
             }
             return false;
@@ -104,6 +91,7 @@ public class TaskListActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras();
         cbyf = bundle.getString("cbyf");
         bch = bundle.getString("bch");
+        divideNumber = bundle.getString("divideNumber");
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         initView();
@@ -117,12 +105,11 @@ public class TaskListActivity extends Activity {
         taskCountTextView = (TextView) findViewById(R.id.taskCount);
 
         //NOTICE 下面这个list数据要一直保存，作为元数据
-        detailDataListOriginal = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ?", cbyf, bch).find(DetailData.class);
-        detailDataListAll = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ?", cbyf, bch).find(DetailData.class);//这个列表用来作为存储用于当前显示的列表，并且当前所有的操作也是要基于这个列表的
-        detailDataListNotYet = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and isChecked = ?", cbyf, bch, "1").find(DetailData.class);
-        detailDataListDone = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and isChecked = ?", cbyf, bch, "0").find(DetailData.class);
+        detailDataListAll = LitePal.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and divideNumber = ?", cbyf, bch, divideNumber).find(DetailData.class);//这个列表用来作为存储用于当前显示的列表，并且当前所有的操作也是要基于这个列表的
+        detailDataListNotYet = LitePal.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and divideNumber = ? and isChecked = ?", cbyf, bch, divideNumber, "1").find(DetailData.class);
+        detailDataListDone = LitePal.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and divideNumber = ?  and isChecked = ?", cbyf, bch, divideNumber, "0").find(DetailData.class);
 
-        updateData(whichPage);
+        updateData();
         updateTipInfo();
         setSearchLisener();//设置搜索框改变的监听器
         setClearEditEvent();//清空输入框
@@ -130,13 +117,13 @@ public class TaskListActivity extends Activity {
     }
 
 
-    private void updateData(String str) {
+    private void updateData() {
         if (whichPage.equals("001")) {
-            subDetailDataList = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order").where("t_cbyf = ? and t_volume_num = ?", cbyf, bch).find(DetailData.class);//NOTICE 查询后的子数据
+            subDetailDataList = LitePal.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and divideNumber = ?", cbyf, bch, divideNumber).find(DetailData.class);
         } else if (whichPage.equals("002")) {
-            subDetailDataList = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order").where("t_cbyf = ? and t_volume_num = ? and isChecked = ? ", cbyf, bch, "1").find(DetailData.class);
+            subDetailDataList = LitePal.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and divideNumber = ? and isChecked = ?", cbyf, bch, divideNumber, "1").find(DetailData.class);
         } else if (whichPage.equals("003")) {
-            subDetailDataList = DataSupport.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order").where("t_cbyf = ? and t_volume_num = ? and isChecked = ?", cbyf, bch, "0").find(DetailData.class);
+            subDetailDataList = LitePal.select("t_card_num", "t_meter_num", "t_ticket_name", "t_location", "isChecked", "t_cbyf", "t_volume_num", "t_id", "isUpload ", "t_volume_order", "t_meter_num").where("t_cbyf = ? and t_volume_num = ? and divideNumber = ?  and isChecked = ?", cbyf, bch, divideNumber, "0").find(DetailData.class);
         }
     }
 
@@ -234,13 +221,14 @@ public class TaskListActivity extends Activity {
                                 dialog.dismiss();
                                 ContentValues values = new ContentValues();
                                 values.put("isUpload", "1");
-                                DataSupport.updateAll(DetailData.class, values, "t_id = ?", tempData.getT_id());
+                                LitePal.updateAll(DetailData.class, values, "t_id = ?", tempData.getT_id());
                                 Intent intent = new Intent(TaskListActivity.this, TaskShowActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("cbyf", tempData.getT_cbyf());
                                 bundle.putString("bch", tempData.getT_volume_num());
                                 bundle.putString("tid", tempData.getT_id());
                                 bundle.putString("whichPage", whichPage);
+                                bundle.putString("divideNumber", divideNumber);
                                 intent.putExtras(bundle);
                                 startActivityForResult(intent, RequestCode);
                             }
@@ -250,13 +238,14 @@ public class TaskListActivity extends Activity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 ContentValues values = new ContentValues();
-                                DataSupport.updateAll(DetailData.class, values, "t_id = ?", tempData.getT_id());
+                                LitePal.updateAll(DetailData.class, values, "t_id = ?", tempData.getT_id());
                                 Intent intent = new Intent(TaskListActivity.this, TaskShowActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("cbyf", tempData.getT_cbyf());
                                 bundle.putString("bch", tempData.getT_volume_num());
                                 bundle.putString("tid", tempData.getT_id());
                                 bundle.putString("whichPage", whichPage);
+                                bundle.putString("divideNumber", divideNumber);
                                 intent.putExtras(bundle);
                                 startActivityForResult(intent, RequestCode);
                             }
@@ -270,6 +259,7 @@ public class TaskListActivity extends Activity {
                         bundle.putString("bch", tempData.getT_volume_num());
                         bundle.putString("tid", tempData.getT_id());
                         bundle.putString("whichPage", whichPage);
+                        bundle.putString("divideNumber", divideNumber);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, RequestCode);
                     }
@@ -299,7 +289,7 @@ public class TaskListActivity extends Activity {
             public void afterTextChanged(Editable s) {
                 if (s.length() == 0) {
                     clearSearch.setVisibility(View.GONE);
-                    updateData(whichPage);
+                    updateData();
                 } else {
                     clearSearch.setVisibility(View.VISIBLE);
                 }
@@ -371,12 +361,10 @@ public class TaskListActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("-----任务列表当前已经执行----");
         if (requestCode == RequestCode && resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             pos = bundle.getInt("postion");
             isonpause = true;
-
         }
 
     }

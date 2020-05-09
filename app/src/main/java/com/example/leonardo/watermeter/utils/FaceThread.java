@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.itgoyo.logtofilelibrary.LogToFileUtils;
 import com.shuibiao.jni.MyApplication;
 import com.example.leonardo.watermeter.ui.TaskShowActivity;
 import com.shuibiao.jni.JNIInterface;
@@ -44,6 +45,8 @@ public class FaceThread extends AsyncTask<Void, Void, String> {
         int[] numsLen = new int[1];
         JNIInterface jniInterface = MyApplication.getInstance().getJniInterface();
         int perocessResult = jniInterface.processImgPathNum(jniInterface.getMhandler(), imgPath, recogNumRes, numScore, numsLen);
+        Log.i(tag, "process code " + perocessResult);
+        LogToFileUtils.write("detect waterMeterNum code :" + perocessResult);
         if (perocessResult == 2) {
             StringBuffer recogBuffer = new StringBuffer();
             for (int i = 0; i < numsLen[0]; i++) {
@@ -59,6 +62,7 @@ public class FaceThread extends AsyncTask<Void, Void, String> {
         super.onPostExecute(s);
         progressDialog.dismiss();
         Log.i(tag, "process result " + s);
+        LogToFileUtils.write("detect waterMeterNum :" + s);
         if (!StringUtils.isEmpty(s)) {
             mContext.updateMeterData(s);
         } else {

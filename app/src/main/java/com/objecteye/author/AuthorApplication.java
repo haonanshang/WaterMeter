@@ -10,6 +10,7 @@ import android.util.Log;
 import com.exception.CrashHandler;
 import com.itgoyo.logtofilelibrary.LogToFileUtils;
 import com.shuibiao.jni.MyApplication;
+import com.squareup.leakcanary.LeakCanary;
 import com.syteco.android.hardwareinfo.service.HeartBeatService;
 
 
@@ -70,6 +71,18 @@ public class AuthorApplication extends LitePalApplication {
 //        CrashHandler crashHandler = CrashHandler.getInstance();
 //        // 注册crashHandler
 //        crashHandler.init(getApplicationContext());
+        //内存泄漏排查
+        //initLeak();
+    }
+
+    /**
+     * 查找内存泄漏
+     */
+    private void initLeak() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return;
+        }
+        LeakCanary.install(this);
     }
 
     /**

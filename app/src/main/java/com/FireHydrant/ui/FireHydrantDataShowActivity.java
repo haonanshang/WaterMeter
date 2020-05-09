@@ -26,7 +26,8 @@ import com.example.leonardo.watermeter.utils.GPSUtils;
 import com.example.leonardo.watermeter.utils.LocationTools;
 import com.example.leonardo.watermeter.utils.ModifyImage;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -77,7 +78,7 @@ public class FireHydrantDataShowActivity extends Activity {
      * 初始化UI界面 以及相应数据
      */
     public void initDatas() {
-        currentData = DataSupport.where("fire_hydrant_id= ?", fire_hydrant_id).findFirst(FireHydrantDetailData.class);
+        currentData = LitePal.where("fire_hydrant_id= ?", fire_hydrant_id).findFirst(FireHydrantDetailData.class);
         isUpload = Integer.valueOf(currentData.getIsUpload().trim());
         imgNameHead = currentData.getDetail_date() + "_" + currentData.getFire_hydrant_id() + "_" + currentData.getBooklet_no() + "_";
         fireHydrantName.setText(currentData.getFire_hydrant_name());
@@ -185,7 +186,7 @@ public class FireHydrantDataShowActivity extends Activity {
         ContentValues values = new ContentValues();
         values.put("longitude", GlobalData.currentLatitude);
         values.put("latitude", GlobalData.currentLongitude);
-        DataSupport.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id = ?", fire_hydrant_id);
+        LitePal.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id = ?", fire_hydrant_id);
         /*重置*/
         GlobalData.currentLongitude = "0";
         GlobalData.currentLatitude = "0";
@@ -222,7 +223,7 @@ public class FireHydrantDataShowActivity extends Activity {
         Log.e("zksy", "消防栓图片路径为： " + imagePath);
         File localFile = new File(imagePath);
         String imageName = localFile.getName();
-        Bitmap bmp = modifyImage.getimage( imagePath, "消防栓", degree);
+        Bitmap bmp = modifyImage.getimage( imagePath, "消防栓", degree,22);
         fireHydrantImage.setImageBitmap(bmp);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String imgTime = simpleDateFormat.format(new java.util.Date());
@@ -240,7 +241,7 @@ public class FireHydrantDataShowActivity extends Activity {
                 values.put("fileNameOne", imageName.substring(0, imageName.lastIndexOf(".")));
                 break;
         }
-        DataSupport.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id = ?", fire_hydrant_id);
+        LitePal.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id = ?", fire_hydrant_id);
         initDatas();
         updateFireHydrantValue();
     }
@@ -252,7 +253,7 @@ public class FireHydrantDataShowActivity extends Activity {
         if (currentData.getImagePathOne() != null && !currentData.getImagePathOne().equals("") && currentData.getImagePathTwo() != null && !currentData.getImagePathTwo().equals("") && currentData.getCurrent_value() != null && !currentData.getCurrent_value().equals("")) {
             ContentValues values1 = new ContentValues();
             values1.put("isChecked", "0");
-            DataSupport.updateAll(FireHydrantDetailData.class, values1, "fire_hydrant_id = ?", fire_hydrant_id);
+            LitePal.updateAll(FireHydrantDetailData.class, values1, "fire_hydrant_id = ?", fire_hydrant_id);
         }
     }
 

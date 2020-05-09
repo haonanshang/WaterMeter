@@ -53,16 +53,6 @@
                 android:textColor="@color/cpb_white"
                 android:textSize="16dp"
                 android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/deviceType"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_centerInParent="true"
-                android:text="设备类型：外接盒子-1"
-                android:textColor="@color/cpb_white"
-                android:textSize="16dp"
-                android:textStyle="bold" />
         </android.support.v7.widget.LinearLayoutCompat>
 
         <ListView

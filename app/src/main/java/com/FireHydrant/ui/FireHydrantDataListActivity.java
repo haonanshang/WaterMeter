@@ -16,7 +16,8 @@ import android.widget.TextView;
 import com.FireHydrant.entity.FireHydrantDetailData;
 import com.example.leonardo.watermeter.R;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
+
 
 public class FireHydrantDataListActivity extends Activity implements View.OnClickListener {
     private LinearLayout fireHydrantDataOne, fireHydrantDataTwo;
@@ -39,7 +40,7 @@ public class FireHydrantDataListActivity extends Activity implements View.OnClic
      *初始化界面和数据
      */
     private void initData() {
-        currentData = DataSupport.where("fire_hydrant_id= ?", fire_hydrant_id).findFirst(FireHydrantDetailData.class);
+        currentData = LitePal.where("fire_hydrant_id= ?", fire_hydrant_id).findFirst(FireHydrantDetailData.class);
         Log.i("FireHydrant", "currentData.getIsUpload:" + currentData.getIsUpload());
         Log.i("FireHydrant", "currentData.getIsChecked:" + currentData.getIsChecked());
         if (currentData.getIsUpload().equals("1")) {
@@ -117,7 +118,7 @@ public class FireHydrantDataListActivity extends Activity implements View.OnClic
                     dialog.dismiss();
                     ContentValues values = new ContentValues();
                     values.put("isUpload", "1");
-                    DataSupport.updateAll(FireHydrantDetailData.class, values, " fire_hydrant_id= ?", fire_hydrant_id);
+                    LitePal.updateAll(FireHydrantDetailData.class, values, " fire_hydrant_id= ?", fire_hydrant_id);
                     Intent intent = new Intent(FireHydrantDataListActivity.this, FireHydrantDataShowActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("fire_hydrant_id", fire_hydrant_id);

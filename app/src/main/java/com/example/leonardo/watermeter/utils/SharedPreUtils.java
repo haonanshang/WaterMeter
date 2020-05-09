@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.FireHydrant.entity.FireHydrantDetailData;
+import com.example.leonardo.watermeter.global.GlobalData;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class SharedPreUtils {
     final static String SPTAG = "WaterMeter";
+
 
     /**
      * 设置ip
@@ -40,6 +42,32 @@ public class SharedPreUtils {
     }
 
     /**
+     * 设置表册分库目标数量
+     *
+     * @param bcNumber
+     * @param context
+     */
+    public static void SetBcNumber(int bcNumber, Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SPTAG, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("bcNumber", bcNumber);
+        editor.commit();
+    }
+
+    /**
+     * 获取表册分库目标数量
+     *
+     * @param context
+     * @return
+     */
+
+    public static int GetBcNumber(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(SPTAG, Context.MODE_PRIVATE);
+        return sp.getInt("bcNumber", GlobalData.DetailDivideNum);
+    }
+
+
+    /**
      * 设置闪光灯之前的状态 true 开闪光灯 false 关闭闪光灯
      *
      * @param isFlash
@@ -64,7 +92,7 @@ public class SharedPreUtils {
     }
 
     /**
-     * 设置 外接设备类型   1:外接设备-1 代表旧式盒子  2:外接设备-2 代表新式盒子
+     * 设置 外接设备类型   0:外接设备-1 代表旧式盒子  1:外接设备-2 代表新式盒子   2：连接设备-3 proSDk
      *
      * @param context
      * @param deviceType
@@ -78,6 +106,7 @@ public class SharedPreUtils {
 
     /**
      * 获取外接设备类型
+     * （最新版）默认是  设备盒子2 proSDk,  3.2.3 版本之前是1
      *
      * @param context
      * @return

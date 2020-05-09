@@ -1,5 +1,6 @@
 package com.example.leonardo.watermeter.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -7,14 +8,16 @@ import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,7 +36,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.blueToothPrinter.BTCallbackInterface;
 import com.example.leonardo.watermeter.utils.CameraUtils;
 import com.example.leonardo.watermeter.utils.CommanUtils;
-import com.example.leonardo.watermeter.utils.GlobalVariables;
 import com.example.leonardo.watermeter.utils.LadderWaterutils;
 import com.blueToothPrinter.BluetoothServiceTest;
 import com.blueToothPrinter.BluetoothValues;
@@ -44,41 +46,41 @@ import com.example.leonardo.watermeter.adapter.RecyWaterYieldAdapter;
 import com.example.leonardo.watermeter.adapter.SpaceItemDecoration;
 import com.example.leonardo.watermeter.entity.BchData;
 import com.example.leonardo.watermeter.entity.DetailData;
-import com.example.leonardo.watermeter.entity.UsedLadderPriceBean;
-import com.example.leonardo.watermeter.entity.WaterYieldBean;
 import com.example.leonardo.watermeter.global.GlobalData;
 import com.example.leonardo.watermeter.utils.CustomDialog;
 import com.example.leonardo.watermeter.utils.FaceThread;
 import com.example.leonardo.watermeter.utils.GPSUtils;
 import com.example.leonardo.watermeter.utils.LocationTools;
 import com.example.leonardo.watermeter.utils.ModifyImage;
-import com.example.leonardo.watermeter.utils.NetWorkUtils;
 import com.example.leonardo.watermeter.utils.PhoneState;
 import com.example.leonardo.watermeter.utils.QuantityCalculationUtils;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 import com.example.leonardo.watermeter.utils.VolumeManage;
 import com.example.leonardo.watermeter.utils.WaterBudgetUtils;
+import com.itgoyo.logtofilelibrary.LogToFileUtils;
+import com.macrovideo.sdk.defines.Defines;
+import com.macrovideo.sdk.defines.ResultCode;
+import com.macrovideo.sdk.media.ILoginDeviceCallback;
+import com.macrovideo.sdk.media.LoginHandle;
+import com.macrovideo.sdk.media.LoginHelper;
+import com.macrovideo.sdk.objects.DeviceInfo;
+import com.macrovideo.sdk.objects.LoginParam;
 import com.objecteye.sy.wbjnidemo.WBJNIActivity;
-import com.objecteye.sy.wbjnidemo.WBJNIUtils;
-import com.objecteye.sy.wifibox.WBValues;
-import com.webview.WebviewActivity;
-import com.wifi.config.Media;
+import com.prosdk.BindingDeviceActivity;
+import com.prosdk.LocalDefines;
+import com.prosdk.NVPlayerShowActivity;
 import com.zbarScan.CaptureActivity;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -86,7 +88,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
 
     private int taskPosition = -1, isupload;
     private String imgNameHead = "";
-    private String cbyf, bch, tid, whichPage;
+    private String cbyf, bch, tid, whichPage, divideNumber;
     private List<DetailData> detailDataListOriginal;
     private DetailData currentData;
     private List<Map<String, Object>> dataList;
@@ -114,12 +116,9 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     //调用相机 保存文件路径
     private String imgTempFilePath = null;
 
-    //final String[] meterStatus = {"正常", "关门", "表糊、碎、不准", "淹没", "杂物堆压", "单户表拆表销户", "水表找不到", "水表移位、升高、清理", "水表倒接、私接", "水表漏水修理", "表内漏水", "倒转", "表已拆", "需拆表", "已关阀"};
-    private int[] boxLocationImgs = {
-            R.drawable.dibiao,
-            R.drawable.qiangbiao
-    };
+    private int[] boxLocationImgs = {R.drawable.dibiao, R.drawable.qiangbiao};
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +129,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
         bch = bundle.getString("bch");
         tid = bundle.getString("tid");
         whichPage = bundle.getString("whichPage");
+        divideNumber = bundle.getString("divideNumber");
         getDBData(); //根据上个页面传来的值来判断，获取初始化数据
         SetLayoutView();
         initView();
@@ -137,7 +137,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
         initListenner();
         setValues();//设置显示的值
         checkPhoto();//检查图片
-        bchData = DataSupport.where("cbyf= ? and bch= ?", cbyf, bch).findFirst(BchData.class);
+        bchData = LitePal.where("cbyf= ? and bch= ?", cbyf, bch).findFirst(BchData.class);
         /**
          *判断表册为手机识别还是后台识别 手机识别下 不允许自动跳转  后台识别 允许选择自动跳转
          */
@@ -353,13 +353,13 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
      */
     private void getDBData() {
         if (whichPage.equals("001")) {//总列表
-            detailDataListOriginal = DataSupport.where("t_cbyf = ? and t_volume_num = ?", cbyf, bch).find(DetailData.class);
+            detailDataListOriginal = LitePal.where("t_cbyf = ? and t_volume_num = ? and divideNumber = ? ", cbyf, bch, divideNumber).find(DetailData.class);
         } else if (whichPage.equals("002")) {//待抄表数据
-            detailDataListOriginal = DataSupport.where("t_cbyf = ? and t_volume_num = ? and isChecked = ?", cbyf, bch, "1").find(DetailData.class);
+            detailDataListOriginal = LitePal.where("t_cbyf = ? and t_volume_num = ? and isChecked = ? and divideNumber = ? ", cbyf, bch, "1", divideNumber).find(DetailData.class);
         } else {
-            detailDataListOriginal = DataSupport.where("t_cbyf = ? and t_volume_num = ? and isChecked = ?", cbyf, bch, "0").find(DetailData.class);
+            detailDataListOriginal = LitePal.where("t_cbyf = ? and t_volume_num = ? and isChecked = ? and divideNumber = ?  ", cbyf, bch, "0", divideNumber).find(DetailData.class);
         }
-        currentData = DataSupport.where("t_id = ?", tid).findFirst(DetailData.class);
+        currentData = LitePal.where("t_id = ?", tid).findFirst(DetailData.class);
         /*
         判断当前任务所在任务列表的位置
          */
@@ -374,9 +374,8 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     检测原本是否有图片
      */
     private void checkPhoto() {
-
         /*检查是否有拍照图片*/
-        if (currentData.getT_image_path() != null && !currentData.getT_image_path().equals("")) {
+        if (!StringUtils.isEmpty(currentData.getT_image_path())) {
             File picFile = new File(currentData.getT_image_path());
             Bitmap bitmap;
             if (picFile.exists()) {
@@ -384,10 +383,6 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                     bitmap = BitmapFactory.decodeFile(currentData.getT_image_path());
                     showImageView.setImageBitmap(bitmap);
                 } catch (Exception e) {
-                    Toast.makeText(this, "图片加载异常，请重新拍照", Toast.LENGTH_SHORT).show();
-                    showImageView.setImageResource(R.mipmap.ic_default);
-                } catch (OutOfMemoryError error) {
-                    Toast.makeText(this, "图片加载异常，请重新拍照", Toast.LENGTH_SHORT).show();
                     showImageView.setImageResource(R.mipmap.ic_default);
                 }
             } else {
@@ -441,6 +436,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     /*
     设置要显示的值
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setValues() {
         setLocation();
         lastRead.setText((currentData.getT_latest_index()));
@@ -484,6 +480,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     /**
      * 设置用水量显示  倒序 以及水价显示
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initRecyDatas() {
         //水量
         recyWaterYieldAdapter = new RecyWaterYieldAdapter(this, WaterBudgetUtils.getWaterYieldList(currentData.getDetail_date_list(), currentData.getUsed_value_list()));//初始化适配器
@@ -527,7 +524,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                             /*更新数据库中当前Task信息*/
                             ContentValues values = new ContentValues();
                             values.put("t_bz", editText.getText().toString());
-                            DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                            LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
                             currentData.setT_bz(editText.getText().toString());
                             bzInfo.setText(currentData.getT_bz());
                             Toast.makeText(TaskShowActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
@@ -603,6 +600,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
         moveToMethod(9);
     }
 
+    @SuppressLint("NewApi")
     public void moveToMethod(int direction) {//1往前走  9往后走
         /**
          * 切换上下户的时候 隐藏自动识别的读数
@@ -628,8 +626,9 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void changeTask() {
-        currentData = DataSupport.where("t_id = ?", currentData.getT_id()).findFirst(DetailData.class);
+        currentData = LitePal.where("t_id = ?", currentData.getT_id()).findFirst(DetailData.class);
         tid = currentData.getT_id();
         setValues();
         setisupload();
@@ -647,12 +646,11 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
         builder.setItems(meterStatus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Log.e("waterMeter", "changeStatus -> which:" + which);
                 jblxStatus.setText(meterStatus[which]);
                 /*更新数据库中当前Task信息*/
                 ContentValues values = new ContentValues();
                 values.put("t_jblx", String.valueOf(which + 1));
-                DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
             }
         });
         builder.show();
@@ -663,7 +661,6 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
      */
     public String[] parseWaterMeterState() {
         String waterMeterStateStr = currentData.getWater_meter_state();
-        //Log.e("waterMeter", "parseWaterMeterState -> waterMeterStateStr:" + waterMeterStateStr);
         JSONArray waterStateArray = JSONObject.parseArray(waterMeterStateStr);
         String[] meterStatus = new String[waterStateArray.size()];
         for (int i = 0; i < waterStateArray.size(); i++) {
@@ -703,7 +700,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                         /*更新数据库中当前Task信息*/
                         ContentValues values = new ContentValues();
                         values.put("t_eid", boxwhich);
-                        DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                        LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
                         boxBuilder.dismiss();
                     }
                 })
@@ -720,7 +717,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
         ContentValues values = new ContentValues();
         values.put("t_x", GlobalData.currentLatitude);
         values.put("t_y", GlobalData.currentLongitude);
-        DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+        LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
         /*更新当前页面使用的currentData*/
         currentData.setT_x(GlobalData.currentLatitude);
         currentData.setT_y(GlobalData.currentLongitude);
@@ -763,14 +760,18 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                 LocationTools.SetLocation(TaskShowActivity.this);
                 int deviceType = SharedPreUtils.getDeviceType(TaskShowActivity.this);
                 Intent intent = null;
-                if (deviceType == 1) {
+                Bundle bundle = new Bundle();
+                if (deviceType == GlobalData.EXTERNAL_DEVICE_ONE) {
                     intent = new Intent(TaskShowActivity.this, WifiActivity.class);
                     requestCode = 101;
-                } else {
+                } else if (deviceType == GlobalData.EXTERNAL_DEVICE_TWO) {
                     intent = new Intent(TaskShowActivity.this, WBJNIActivity.class);
                     requestCode = 100;
+                } else if (deviceType == GlobalData.EXTERNAL_DEVICE_THREE) {
+                    intent = new Intent(TaskShowActivity.this, NVPlayerShowActivity.class);
+                    requestCode = 104;
+                    bundle.putBoolean("isOnlyShow", false);
                 }
-                Bundle bundle = new Bundle();
                 bundle.putBoolean("isFireHydrant", false);
                 bundle.putString("imagePath", imgFilePath);
                 intent.putExtras(bundle);
@@ -781,9 +782,11 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
         }
     }
 
+
     /**
      * 删除当前显示照片
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void deletephoto(View view) {
         if (currentData.getT_image_path() != null && !currentData.getT_image_path().equals("")) {
             File picFile = new File(currentData.getT_image_path());
@@ -791,7 +794,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                 picFile.delete();
                 ContentValues values = new ContentValues();
                 values.put("t_image_path", "");
-                DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
                 changeTask();
             } else {
                 Toast.makeText(TaskShowActivity.this, "本地图片已经删除", Toast.LENGTH_SHORT).show();
@@ -816,7 +819,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                             /*更新数据库中当前Task信息*/
                             ContentValues values = new ContentValues();
                             values.put("t_new_phonenumber", editText.getText().toString());
-                            DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                            LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
                             currentData.setT_new_phonenumber(editText.getText().toString());
                             updatemobilePhone.setText(currentData.getT_new_phonenumber());
                             Toast.makeText(TaskShowActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
@@ -897,7 +900,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                          */
                         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM-dd HH:mm:ss");
                         String waterMarkTime = simpleDateFormat1.format(new java.util.Date());
-                        Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0);
+                        Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0, 22);
                         showImageView.setImageBitmap(bmp);
                         updateDataAfterPhoto(localImageStr);
                     }
@@ -913,7 +916,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                          */
                         SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM-dd HH:mm:ss");
                         String waterMarkTime = simpleDateFormat1.format(new java.util.Date());
-                        Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0);
+                        Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0, 22);
                         showImageView.setImageBitmap(bmp);
                         updateDataAfterPhoto(localImageStr);
                     }
@@ -927,11 +930,10 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                      */
                     SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM-dd HH:mm:ss");
                     String waterMarkTime = simpleDateFormat1.format(new java.util.Date());
-                    Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0);
+                    Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0, 22);
                     showImageView.setImageBitmap(bmp);
                     updateDataAfterPhoto(localImageStr);
                 }
-
                 break;
             case 103://调用系统相机拍照
                 if (resultCode == Activity.RESULT_OK) {
@@ -951,6 +953,17 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                }
+                break;
+            case 104://调用proV380
+                if (resultCode == LocalDefines.RESULT_SUCCESSFULE) {
+                    String localImageStr = data.getExtras().getString("imageStr");
+                    //显示照片
+                    SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM-dd HH:mm:ss");
+                    String waterMarkTime = simpleDateFormat1.format(new java.util.Date());
+                    Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0, 22);
+                    showImageView.setImageBitmap(bmp);
+                    updateDataAfterPhoto(localImageStr);
                 }
                 break;
             case BluetoothValues.REQUEST_CONNECT_DEVICE://蓝牙连接
@@ -1013,7 +1026,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
             values.put("t_image_name", imageName.substring(0, imageName.lastIndexOf(".")));
             values.put("isChecked", "0");
             values.put("t_cur_read_data", imgTime);
-            DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+            LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
             /**
              * 在非自动模式下 才允许设置自动跳转
              */
@@ -1068,15 +1081,17 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
             values.put("auto_detect_flag", "0");
             values.put(" modify_detect_num", "");
             values.put("t_cur_read_water_sum", String.valueOf(currentReadWaterSum));
-            DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+            LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
             showDetectNum.setText(curMeterData);
             showDetectNum.setVisibility(View.VISIBLE);
             currentRead.setText(curMeterData);
             currentRead.setTextColor(getResources().getColor(R.color.cpb_green_dark));
             currentWaterSum.setText(String.valueOf(currentReadWaterSum));
             currentWaterSum.setTextColor(getResources().getColor(R.color.cpb_green_dark));
-            currentData = DataSupport.where("t_id = ?", currentData.getT_id()).findFirst(DetailData.class);
+            currentData = LitePal.where("t_id = ?", currentData.getT_id()).findFirst(DetailData.class);
         } catch (Exception e) {
+            e.printStackTrace();
+            LogToFileUtils.write(e.toString());
         }
     }
 
@@ -1103,7 +1118,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onRestart() {
         super.onRestart();
-        currentData = DataSupport.where("t_id = ?", currentData.getT_id()).findFirst(DetailData.class);
+        currentData = LitePal.where("t_id = ?", currentData.getT_id()).findFirst(DetailData.class);
         tid = currentData.getT_id();
     }
 

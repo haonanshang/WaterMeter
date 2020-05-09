@@ -17,7 +17,11 @@ public class GlobalData {
 
     public static String currentLongitude = "0";//当前任务的经度
     public static String currentLatitude = "0";//当前任务的纬度
-    public static String[] UniQueBrandArray={"MANN"};
-    public static String  Brand=null;
+    public static String[] UniQueBrandArray = {"MANN"};
+    public static String Brand = null;
+    public static int DetailDivideNum = 500;     //表册划分默认数量
+    public static int EXTERNAL_DEVICE_ONE=0 ;    // 外接设备1
+    public static int EXTERNAL_DEVICE_TWO=1 ;    // 外接设备2
+    public static int EXTERNAL_DEVICE_THREE=2 ;  // 外接设备3
 
 }

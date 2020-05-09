@@ -7,8 +7,9 @@ import com.FireHydrant.entity.FireHydrantBchData;
 import com.FireHydrant.entity.FireHydrantDetailData;
 import com.example.leonardo.watermeter.entity.BchData;
 import com.example.leonardo.watermeter.entity.DetailData;
+import com.example.leonardo.watermeter.entity.DetailDivideData;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class DBHelper {
                 bchDataList.add(bchData);
             }
             if (!bchDataList.isEmpty()) {
-                DataSupport.saveAll(bchDataList);
+                LitePal.saveAll(bchDataList);
             } else {
                 Toast.makeText(context, "存储失败！", Toast.LENGTH_SHORT).show();
             }
@@ -50,7 +51,7 @@ public class DBHelper {
                 bchDataList.add(bchData);
             }
             if (!bchDataList.isEmpty()) {
-                DataSupport.saveAll(bchDataList);
+                LitePal.saveAll(bchDataList);
             } else {
                 Toast.makeText(context, "存储失败！", Toast.LENGTH_SHORT).show();
             }
@@ -67,11 +68,11 @@ public class DBHelper {
     public static void deleteDownLoadData(Context mContext, String cbyf, String bch) {
         boolean isFireHydrant = SharedPreUtils.getDataType(mContext);
         if (isFireHydrant) {
-            DataSupport.deleteAll(FireHydrantDetailData.class, "detail_date= ? and booklet_no = ? ", cbyf, bch);
-            DataSupport.deleteAll(FireHydrantBchData.class, "cbyf = ? and bch = ?", cbyf, bch);
+            LitePal.deleteAll(FireHydrantDetailData.class, "detail_date= ? and booklet_no = ? ", cbyf, bch);
         } else {
-            DataSupport.deleteAll(DetailData.class, "t_cbyf = ? and t_volume_num = ? ", cbyf, bch);
-            DataSupport.deleteAll(BchData.class, "cbyf = ? and bch = ?", cbyf, bch);
+            LitePal.deleteAll(DetailData.class, "t_cbyf = ? and t_volume_num = ? ", cbyf, bch);
+            LitePal.deleteAll(BchData.class, "cbyf = ? and bch = ?", cbyf, bch);
+            LitePal.deleteAll(DetailDivideData.class, "cbyf = ? and bch = ?", cbyf, bch);
         }
     }
 
@@ -84,19 +85,32 @@ public class DBHelper {
      * @return
      */
     public static boolean checkDownloadData(Context mContext, String cbyf, String bch) {
-        List data = null;
+        int count = 0;
         boolean isFireHydrant = SharedPreUtils.getDataType(mContext);
         if (isFireHydrant) {
-            data = DataSupport.where("cbyf = ? and bch = ? ", cbyf, bch).find(FireHydrantBchData.class);
+            count = LitePal.where("cbyf = ? and bch = ? ", cbyf, bch).count(FireHydrantBchData.class);
         } else {
-            data = DataSupport.where("cbyf = ? and bch = ? ", cbyf, bch).find(BchData.class);
+            count = LitePal.where("cbyf = ? and bch = ? ", cbyf, bch).count(BchData.class);
         }
-        if (!data.isEmpty()) {
+        if (count > 0) {
             return true;
         } else {
             return false;
         }
     }
 
-
+    /**
+     * 更新分类数据
+     */
+    public static void updateDivideData(String cbyf, String bch) {
+        List<DetailDivideData> mDatas = LitePal.where("cbyf = ? and bch = ?", cbyf, bch).find(DetailDivideData.class);
+        for (int i = 0; i < mDatas.size(); i++) {
+            DetailDivideData detailDivideData = mDatas.get(i);
+            String startIndex = LitePal.where("t_cbyf = ? and t_volume_num = ? and divideNumber = ? ", detailDivideData.getCbyf(), detailDivideData.getBch(), detailDivideData.getDivideNumber()).findFirst(DetailData.class).getT_volume_order();
+            String endIndex = LitePal.where("t_cbyf = ? and t_volume_num = ? and divideNumber = ? ", detailDivideData.getCbyf(), detailDivideData.getBch(), detailDivideData.getDivideNumber()).findLast(DetailData.class).getT_volume_order();
+            detailDivideData.setStartIndex(startIndex);
+            detailDivideData.setEndIndex(endIndex);
+            detailDivideData.updateAll("cbyf= ? and bch = ? and divideNumber = ? ", detailDivideData.getCbyf(), detailDivideData.getBch(), detailDivideData.getDivideNumber());
+        }
+    }
 }

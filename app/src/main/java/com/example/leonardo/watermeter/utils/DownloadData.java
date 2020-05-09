@@ -10,7 +10,8 @@ import com.example.leonardo.watermeter.download.DownloadDialog;
 import com.example.leonardo.watermeter.ui.MonthListViewActivity;
 
 import org.apache.axis.utils.StringUtils;
-import org.litepal.crud.DataSupport;
+import org.apache.poi.util.ArrayUtil;
+import org.litepal.LitePal;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.ByteArrayOutputStream;
@@ -20,7 +21,6 @@ import java.net.ConnectException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -84,11 +84,10 @@ public class DownloadData {
             try {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder().url(urlPath).build();
-                okhttp3.Response response = null;
-                response = client.newCall(request).execute();
+                okhttp3.Response response = client.newCall(request).execute();
                 if (response.isSuccessful()) {
                     responseString = response.body().string();
-                    System.out.println("联网-表册号返回内容：" + responseString);
+                    Log.i(TAG, "联网-表册号返回内容：" + responseString);
                 } else {
                     Log.i(TAG, "okHttp is request error");
                 }
@@ -104,6 +103,7 @@ public class DownloadData {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            progressDialog.dismiss();
             if (!StringUtils.isEmpty(s)) {
                 if (!s.equals("netError")) {
                     final String[] bcList = s.split(",");
@@ -116,7 +116,6 @@ public class DownloadData {
             } else {
                 Toast.makeText(context, "表册号列表数据为空", Toast.LENGTH_SHORT).show();
             }
-            progressDialog.dismiss();
         }
     }
 
@@ -128,12 +127,14 @@ public class DownloadData {
         MonthListViewActivity mContext;
         ProgressDialog progressDialog;
         int downloadTotal = 0;
+        int divideLimit = 0;
 
         public GetTaskData(MonthListViewActivity context, String imei, String cbyf, String[] bcList) {
             this.mContext = context;
             this.imei = imei;
             this.cbyf = cbyf;
             this.bcList = bcList;
+            divideLimit = SharedPreUtils.GetBcNumber(mContext);
         }
 
         @Override
@@ -161,6 +162,10 @@ public class DownloadData {
                     Request request = new Request.Builder().url(urlPath).build();
                     okhttp3.Response response = client.newCall(request).execute();
                     if (response.isSuccessful()) {
+                        //删除已经下载的数据
+                        if (DBHelper.checkDownloadData(mContext, cbyf, bcList[i])) {
+                            DBHelper.deleteDownLoadData(mContext, cbyf, bcList[i]);
+                        }
                         InputStream inputStream = response.body().byteStream();
                         List detailDataList = null;
                         if (isFireHydrant) {
@@ -170,7 +175,6 @@ public class DownloadData {
                             String userInfo = getUserInfo();
                             JSONObject userInfoJson = (JSONObject) JSONObject.parseObject(userInfo);
                             String waterMeterStateStr = userInfoJson.getJSONArray("water_meter_state").toString();
-                            //Log.e("waterMeter", "GetTaskData -> waterMeterStateStr:" + waterMeterStateStr);
                             //获取阶梯水价
                             String ladderJson = getLadderPrice();
                             JSONObject jsonObject = (JSONObject) JSONObject.parseObject(ladderJson);
@@ -179,28 +183,24 @@ public class DownloadData {
                             if (resultCode.equals("0")) {
                                 ladder_price = jsonObject.getJSONArray("ladder_price_config").toString();
                             }
-                            detailDataList = ParseXml.getDetailData(inputStream, cbyf, ladder_price, waterMeterStateStr);
+                            detailDataList = ParseXml.getDetailData(inputStream, cbyf, bcList[i], ladder_price, waterMeterStateStr, divideLimit);
                         }
-                        if (detailDataList.size() > 0) {
-                            Log.i(TAG, "download bch is " + bcList[i]);
-                            if (DBHelper.checkDownloadData(mContext, cbyf, bcList[i])) {
-                                DBHelper.deleteDownLoadData(mContext, cbyf, bcList[i]);
-                            }
-                            DataSupport.saveAll(detailDataList);//将解析后的数据存入数据库
-                            DBHelper.saveBCToDB(new String[]{bcList[i]}, cbyf, mContext);
-                            downloadTotal++;
-                        }
+                        LitePal.saveAll(detailDataList);//将解析后的数据存入数据库
+                        DBHelper.updateDivideData(cbyf, bcList[i]);
+                        DBHelper.saveBCToDB(new String[]{bcList[i]}, cbyf, mContext);
+                        downloadTotal++;
                     } else {
                         Log.i(TAG, "okHttp is request error");
                     }
                 } catch (XmlPullParserException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             return null;
         }
+
 
         /**
          * 获取阶梯水价json数据

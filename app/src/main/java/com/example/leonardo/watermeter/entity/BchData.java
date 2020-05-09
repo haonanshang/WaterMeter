@@ -1,12 +1,13 @@
 package com.example.leonardo.watermeter.entity;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.crud.LitePalSupport;
 
 /**
  * Created by Leonardo on 2017/5/2.
  */
 
-public class BchData extends DataSupport {
+public class BchData extends LitePalSupport {
     private String cbyf;
     private String bch;
     private String isDetectByPhone;//是否在手机端识别 0 是手机端识别  无自动跳转选项 1 是不识别  允许自动跳转

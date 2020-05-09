@@ -1,6 +1,9 @@
 package com.example.leonardo.watermeter.utils;
 
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
 import com.example.leonardo.watermeter.entity.WaterYieldBean;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -8,10 +11,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 水量计算工具
@@ -64,6 +69,7 @@ public class WaterBudgetUtils {
      * @param used_value_list  已超月份水量的使用情况  对应月份列表
      * @return
      */
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<WaterYieldBean> getWaterYieldList(String detail_date_list, String used_value_list) {
         Map<String, String> waterYieldMap = new LinkedHashMap<String, String>();
         if (!StringUtils.isEmpty(detail_date_list) && !StringUtils.isEmpty(used_value_list)) {
@@ -83,21 +89,19 @@ public class WaterBudgetUtils {
         List<WaterYieldBean> waterYieldBeanList = new ArrayList<>();
         if (waterYieldMap.size() >= 12) {
             Set<String> waterYieldSet = waterYieldMap.keySet();
-            int count = 0;
-            for (String detail_data : waterYieldSet) {
-                if (count == 12) {
-                    break;
-                } else {
-                    waterYieldBeanList.add(new WaterYieldBean(waterYieldMap.get(detail_data), detail_data));
-                }
+            // 倒序截取 最近12个月的数据
+            List<String> detailDataList = waterYieldSet.stream().sorted(Comparator.reverseOrder()).limit(12).collect(Collectors.toList());
+            for (String detailData : detailDataList) {
+                waterYieldBeanList.add(new WaterYieldBean(waterYieldMap.get(detailData), detailData));
             }
         } else if (waterYieldMap.size() > 0 && waterYieldMap.size() < 12) {
             Set<String> waterYieldSet = waterYieldMap.keySet();
+            //TODO 倒序展示，后面数据默认是正序显示，因此加到头
+            for (int i = waterYieldMap.size(); i < 12; i++) {
+                waterYieldBeanList.add(new WaterYieldBean(null, null));
+            }
             for (String detail_data : waterYieldSet) {
                 waterYieldBeanList.add(new WaterYieldBean(waterYieldMap.get(detail_data), detail_data));
-            }
-            for (int i = waterYieldBeanList.size() - 1; i < 12; i++) {
-                waterYieldBeanList.add(new WaterYieldBean(null, null));
             }
         } else {
             for (int i = 0; i < 12; i++) {

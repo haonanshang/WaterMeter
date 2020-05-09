@@ -2,6 +2,8 @@ package com.example.leonardo.watermeter.adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +13,23 @@ import android.widget.TextView;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.WaterYieldBean;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RecyWaterYieldAdapter extends RecyclerView.Adapter<RecyWaterYieldAdapter.VH> {
     private Context mContext;
     private List<WaterYieldBean> mDatas;
 
-    public RecyWaterYieldAdapter(Context mContext, List<WaterYieldBean> mDatas) {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public RecyWaterYieldAdapter(Context mContext, List<WaterYieldBean> datas) {
+        //倒序
         this.mContext = mContext;
-        this.mDatas = mDatas;
+        if (!datas.isEmpty()) {
+            this.mDatas = datas.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
+        } else {
+            this.mDatas = datas;
+        }
     }
 
     public static class VH extends RecyclerView.ViewHolder {

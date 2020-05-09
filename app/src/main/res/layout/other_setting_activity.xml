@@ -23,6 +23,5 @@
             android:thumb="@drawable/thumb"
             android:track="@drawable/track" />
     </LinearLayout>
-    l
 
 </LinearLayout>

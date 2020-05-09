@@ -1,7 +1,6 @@
 package com.extended;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -12,10 +11,10 @@ import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.DetailData;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -53,7 +52,7 @@ public class DownLoadMessageActiviy extends Activity {
      */
     private void initDatas() {
         mDatas = new ArrayList<>();
-        List<DetailData> monthList = DataSupport.select("t_cbyf").where("isUpload=? and isChecked =? ", "1", "0").find(DetailData.class);
+        List<DetailData> monthList = LitePal.select("t_cbyf").where("isUpload=? and isChecked =? ", "1", "0").find(DetailData.class);
         if (monthList.size() > 0) {
             //月份排序  降序排列
             TreeSet<Integer> monthSet = new TreeSet<>();
@@ -64,7 +63,7 @@ public class DownLoadMessageActiviy extends Activity {
             Log.e("zksy", "月份数量为：" + monthSet.size());
             //查找已拍照但是未上传的表册
             for (Integer month : monthSet) {
-                List<DetailData> statisTicalFormsList = DataSupport.select("t_volume_num").where("t_cbyf= ? and isUpload= ? and isChecked = ?", String.valueOf(month), "1", "0").find(DetailData.class);
+                List<DetailData> statisTicalFormsList = LitePal.select("t_volume_num").where("t_cbyf= ? and isUpload= ? and isChecked = ?", String.valueOf(month), "1", "0").find(DetailData.class);
                 TreeSet<String> statisTicalFormsSet = new TreeSet<>();
                 for (DetailData detailData : statisTicalFormsList) {
                     statisTicalFormsSet.add(detailData.getT_volume_num());

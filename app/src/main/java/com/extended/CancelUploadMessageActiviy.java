@@ -11,11 +11,10 @@ import android.widget.Toast;
 
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.DetailData;
-import com.example.leonardo.watermeter.ui.MonthListViewActivity;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 
-import org.apache.poi.poifs.crypt.cryptoapi.CryptoAPIDecryptor;
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,7 @@ public class CancelUploadMessageActiviy extends Activity {
      */
     private void initDatas() {
         mDatas = new ArrayList<>();
-        List<DetailData> monthList = DataSupport.select("t_cbyf").where("isUpload=?", "0").find(DetailData.class);
+        List<DetailData> monthList = LitePal.select("t_cbyf").where("isUpload=?", "0").find(DetailData.class);
         if (monthList.size() > 0) {
             //月份排序  降序排列
             TreeSet<Integer> monthSet = new TreeSet<>();
@@ -65,7 +64,7 @@ public class CancelUploadMessageActiviy extends Activity {
             }
             //查找下载的表册
             for (Integer month : monthSet) {
-                List<DetailData> statisTicalFormsList = DataSupport.select("t_volume_num ").where("t_cbyf= ? and isUpload=?", String.valueOf(month), "0").find(DetailData.class);
+                List<DetailData> statisTicalFormsList = LitePal.select("t_volume_num ").where("t_cbyf= ? and isUpload=?", String.valueOf(month), "0").find(DetailData.class);
                 TreeSet<String> statisTicalFormsSet = new TreeSet<>();
                 for (DetailData detailData : statisTicalFormsList) {
                     statisTicalFormsSet.add(detailData.getT_volume_num());

@@ -11,7 +11,8 @@ import android.widget.TextView;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.DetailData;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,7 @@ public class DownloadAdapter extends BaseAdapter {
         DownloadModel mModel = data.get(i);
         hd = (ViewHoder) view.getTag();
         hd.bchTv.setText(mModel.getSt());
-        if (DataSupport.where("t_cbyf = ? and t_volume_num = ?", mCbyf, mModel.getSt()).find(DetailData.class).size() > 0) {
+        if (LitePal.where("t_cbyf = ? and t_volume_num = ?", mCbyf, mModel.getSt()).count(DetailData.class)> 0) {
             hd.bchStateTv.setText("已下载");
             hd.bchStateTv.setTextColor(context.getResources().getColor(R.color.red));
         } else {

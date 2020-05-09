@@ -12,11 +12,9 @@ import android.widget.Toast;
 import com.FireHydrant.entity.FireHydrantDetailData;
 import com.FireHydrant.ui.FireHydrantDataShowActivity;
 import com.example.leonardo.watermeter.R;
-import com.example.leonardo.watermeter.entity.DetailData;
-import com.example.leonardo.watermeter.global.GlobalData;
-import com.example.leonardo.watermeter.ui.TaskShowActivity;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
 
@@ -152,7 +150,7 @@ public class FireHydrantDialog extends Dialog implements View.OnClickListener {
                         values.put("check_date", imgTime);
                         values.put("current_value", currentReadString);
                         values.put("current_water_data", String.valueOf(currentReadWaterSum));
-                        DataSupport.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id  = ?", mDetaiData.getFire_hydrant_id());
+                        LitePal.updateAll(FireHydrantDetailData.class, values, "fire_hydrant_id  = ?", mDetaiData.getFire_hydrant_id());
                         Toast.makeText(mActivity, Result, Toast.LENGTH_SHORT).show();
                         mActivity.initDatas();
                         mActivity.updateFireHydrantValue();

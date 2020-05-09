@@ -1,11 +1,11 @@
 package com.FireHydrant.entity;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
 /*
 消防栓的表册
  */
-public class FireHydrantBchData extends DataSupport {
+public class FireHydrantBchData extends LitePalSupport {
     private String cbyf;
     private String bch;
 

@@ -25,7 +25,8 @@ import com.FireHydrant.entity.FireHydrantDetailData;
 import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,10 +108,10 @@ public class FireHydrantTaskListActivity extends Activity {
         taskCountTextView = (TextView) findViewById(R.id.taskCount);
 
         //NOTICE 下面这个list数据要一直保存，作为元数据
-        detailDataListOriginal = DataSupport.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ?", cbyf, bch).find(FireHydrantDetailData.class);
-        detailDataListAll = DataSupport.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ?", cbyf, bch).find(FireHydrantDetailData.class);//这个列表用来作为存储用于当前显示的列表，并且当前所有的操作也是要基于这个列表的
-        detailDataListNotYet = DataSupport.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "1").find(FireHydrantDetailData.class);
-        detailDataListDone = DataSupport.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "0").find(FireHydrantDetailData.class);
+        detailDataListOriginal = LitePal.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ?", cbyf, bch).find(FireHydrantDetailData.class);
+        detailDataListAll = LitePal.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ?", cbyf, bch).find(FireHydrantDetailData.class);//这个列表用来作为存储用于当前显示的列表，并且当前所有的操作也是要基于这个列表的
+        detailDataListNotYet = LitePal.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "1").find(FireHydrantDetailData.class);
+        detailDataListDone = LitePal.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "0").find(FireHydrantDetailData.class);
 
         updateData(whichPage);
         updateTipInfo();
@@ -122,11 +123,11 @@ public class FireHydrantTaskListActivity extends Activity {
 
     private void updateData(String str) {
         if (whichPage.equals("001")) {
-            subDetailDataList = DataSupport.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ?", cbyf, bch).find(FireHydrantDetailData.class);
+            subDetailDataList = LitePal.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ?", cbyf, bch).find(FireHydrantDetailData.class);
         } else if (whichPage.equals("002")) {
-            subDetailDataList = DataSupport.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "1").find(FireHydrantDetailData.class);
+            subDetailDataList = LitePal.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "1").find(FireHydrantDetailData.class);
         } else if (whichPage.equals("003")) {
-            subDetailDataList = DataSupport.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "0").find(FireHydrantDetailData.class);
+            subDetailDataList = LitePal.select("fire_hydrant_id", "fire_hydrant_name", "booklet_no", "org_code", "detail_date", "address", "longitude", "latitude", "state", "type", "isChecked", "isUpload").where("detail_date = ? and booklet_no = ? and isChecked = ?", cbyf, bch, "0").find(FireHydrantDetailData.class);
         }
     }
 

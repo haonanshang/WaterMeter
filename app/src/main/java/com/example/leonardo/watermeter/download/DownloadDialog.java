@@ -2,6 +2,7 @@ package com.example.leonardo.watermeter.download;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -109,9 +110,8 @@ public class DownloadDialog extends AlertDialog implements View.OnClickListener 
      */
     private void initDatas() {
         models = new ArrayList<>();
-        DownloadModel model;
         for (int i = 0; i < mBchArray.length; i++) {
-            model = new DownloadModel();
+            DownloadModel  model = new DownloadModel();
             model.setSt(mBchArray[i]);
             model.setIscheck(false);
             models.add(model);

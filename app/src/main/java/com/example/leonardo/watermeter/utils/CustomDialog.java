@@ -15,8 +15,8 @@ import com.example.leonardo.watermeter.global.GlobalData;
 import com.example.leonardo.watermeter.ui.TaskShowActivity;
 import com.itgoyo.logtofilelibrary.LogToFileUtils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.text.SimpleDateFormat;
 
@@ -152,7 +152,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener {
                                 values.put("auto_detect_flag", "1");
                                 values.put("modify_detect_num", mDetaiData.getT_cur_meter_data());
                             }
-                            DataSupport.updateAll(DetailData.class, values, "t_id = ?", mDetaiData.getT_id());
+                            LitePal.updateAll(DetailData.class, values, "t_id = ?", mDetaiData.getT_id());
                             try {
                                 if (!QuantityCalculationUtils.WaterEstimat(mDetaiData.getT_average(), String.valueOf(currentReadWaterSum))) {
                                     Result = "本月用水量超过平均值";

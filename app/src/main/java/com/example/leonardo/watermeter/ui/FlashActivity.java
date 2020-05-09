@@ -33,6 +33,7 @@ public class FlashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_flash);
+
         /**
          * 获取设备信息
          */

@@ -18,7 +18,7 @@ import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +136,7 @@ public class UploadTask extends AsyncTask<Void, Integer, Boolean> {
                         for (DetailData currentData : uploadCurrentList) {
                             ContentValues values = new ContentValues();
                             values.put("isUpload", "0");
-                            DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+                            LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
                             CurrentUploadIndex += 1;
                         }
                     }

@@ -1,19 +1,10 @@
 package com.extended;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.view.KeyEvent;
 
-import com.FireHydrant.entity.FireHydrantBchData;
-import com.FireHydrant.entity.FireHydrantDetailData;
-import com.example.leonardo.watermeter.ui.MonthListViewActivity;
-import com.example.leonardo.watermeter.utils.DBHelper;
 
-import org.litepal.crud.DataSupport;
 
-import java.security.spec.PSSParameterSpec;
 
 public class MessageDialog {
     public static ProgressDialog progressDialog;

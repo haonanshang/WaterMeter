@@ -18,7 +18,8 @@ import com.example.leonardo.watermeter.R;
 import com.example.leonardo.watermeter.entity.DetailData;
 import com.example.leonardo.watermeter.global.GlobalData;
 
-import org.litepal.crud.DataSupport;
+
+import org.litepal.LitePal;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,7 +43,7 @@ public class ManualInputActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras();
         tid = bundle.getString("tid");
 
-        currentData = DataSupport.where("t_id = ?", tid).findFirst(DetailData.class);
+        currentData = LitePal.where("t_id = ?", tid).findFirst(DetailData.class);
 
         initView();
         setData();
@@ -132,7 +133,7 @@ public class ManualInputActivity extends Activity {
             ContentValues values = new ContentValues();
             values.put("t_cur_read_water_sum", readWaterSum.getText().toString());
             values.put("t_cur_meter_data", currentCbNumber.getText().toString());
-            DataSupport.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
+            LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
             Toast.makeText(getApplicationContext(), "保存成功", Toast.LENGTH_SHORT).show();
             GlobalData.isFromManual = true;
             finish();
