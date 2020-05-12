@@ -129,7 +129,7 @@
         <activity android:name=".ui.DivideBClistViewActivity" />
         <activity android:name="com.extended.BcSettingActivity" />
         <activity android:name="com.prosdk.BindingDeviceActivity" android:screenOrientation="portrait"/>
-        <activity android:name="com.prosdk.NVPlayerShowActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.prosdk.NVPlayerShowActivity" android:screenOrientation="landscape"/>
         <activity
             android:name="com.webview.WebviewActivity"
             android:screenOrientation="landscape" />

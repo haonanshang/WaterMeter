@@ -3,7 +3,6 @@ package com.prosdk;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -35,16 +33,12 @@ import com.macrovideo.sdk.media.LoginHelper;
 import com.macrovideo.sdk.media.NVPanoPlayer;
 import com.macrovideo.sdk.objects.DeviceInfo;
 import com.macrovideo.sdk.objects.LoginParam;
-import com.macrovideo.sdk.tools.Functions;
 import com.objecteye.author.AuthorApplication;
-import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 public class NVPlayerShowActivity extends Activity {
@@ -118,7 +112,7 @@ public class NVPlayerShowActivity extends Activity {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         initScreen();
         initDatas();
-        setContentView(R.layout.activity_nvplayer_show);
+        setContentView(R.layout.activity_nvplayer_show_landscape);
     }
 
 
@@ -243,7 +237,7 @@ public class NVPlayerShowActivity extends Activity {
             GLFisheyeView fisheyeView = new GLFisheyeView(this);
             fisheyeView.setMode(NVPanoPlayer.PANO_PLAY_MODE_13);
             mNVPanoPlayer.setGlFishView(fisheyeView);
-            mNVPanoPlayer.setCamImageOrientation(Configuration.ORIENTATION_PORTRAIT);
+            mNVPanoPlayer.setCamImageOrientation(Configuration.ORIENTATION_LANDSCAPE);
         }
     }
 
@@ -297,7 +291,7 @@ public class NVPlayerShowActivity extends Activity {
                 break;
         }
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(layoutParamWidth, layoutParamHeight);
-        linearLayout.setGravity(Gravity.RIGHT);
+        linearLayout.setGravity(Gravity.CENTER);
         linearLayout.addView(mNVPanoPlayer.getGLFisheyeView(), layoutParams);
         coniaterLinearLayout.addView(linearLayout);
     }
@@ -307,7 +301,7 @@ public class NVPlayerShowActivity extends Activity {
      * 创建OpenGl表面，并设置渲染模式为请求渲染
      */
     private void InitGLViewPlayer() {
-        orientationPortraitSetting();
+        orientationLandscapeSetting();
     }
 
     /**

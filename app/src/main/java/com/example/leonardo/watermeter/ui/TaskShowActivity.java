@@ -961,7 +961,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                     //显示照片
                     SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM-dd HH:mm:ss");
                     String waterMarkTime = simpleDateFormat1.format(new java.util.Date());
-                    Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0, 22);
+                    Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 90, 36);
                     showImageView.setImageBitmap(bmp);
                     updateDataAfterPhoto(localImageStr);
                 }
