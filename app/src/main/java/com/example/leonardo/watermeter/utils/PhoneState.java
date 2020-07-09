@@ -50,25 +50,8 @@ public class PhoneState {
      * @return
      */
     public static String getUniqueID(Context context) {
-        String id = null;
+        //String id = null;
         final String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        /**
-         * 加密android ID
-         */
-        System.out.println("getUniqueID::androidId::" + androidId);
-//        if (!TextUtils.isEmpty(androidId)) {
-//            try {
-//                UUID uuid = UUID.nameUUIDFromBytes(androidId.getBytes("utf8"));
-//                id = uuid.toString();
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        System.out.println("getUniqueID::encrypt::androidId::" + id);
-//        if (TextUtils.isEmpty(id)) {
-//            id = getUUID();
-//        }
-//        return TextUtils.isEmpty(id) ? UUID.randomUUID().toString() : id;
         return androidId;
     }
 
