@@ -1,16 +1,17 @@
+//noinspection GradleCompatible
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.0'
     aaptOptions.cruncherEnabled = false
     aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId "com.example.leonardo.watermeter"
         minSdkVersion 23
-        targetSdkVersion 26
+        targetSdkVersion 29
         versionCode 10
-        versionName "3.3.3"
+        versionName "3.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
@@ -44,9 +45,12 @@ dependencies {
     })
     implementation files('libs/ksoap2-android-assembly-2.4-jar-with-dependencies.jar')
     implementation files('libs/gson-2.3.1.jar')
+    //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    //noinspection GradleCompatible
     implementation 'com.android.support:support-vector-drawable:26.1.0'
+    //noinspection GradleCompatible
     implementation 'com.android.support:design:26.1.0'
     testImplementation 'junit:junit:4.12'
     implementation files('libs/BaiduLBS_Android.jar')
@@ -67,6 +71,7 @@ dependencies {
     implementation 'org.litepal.android:java:3.0.0'
     implementation files('libs/btsdk.jar')
     implementation 'com.alibaba:fastjson:1.2.62'
+    //noinspection GradleCompatible
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation files('libs\\WBUtils-1.1.jar')
     //注释掉原有bugly的仓库
@@ -76,7 +81,7 @@ dependencies {
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
     //其中latest.release指代最新版本号，也可以指定明确的版本号，例如2.2.0
     implementation 'com.zhy:okhttputils:2.6.2'
-    implementation files('src\\main\\jniLibs\\sydp_1.0.7_release_20200106.aar')
+    implementation files('src\\main\\jniLibs\\sydp_1.0.8_release_20200706.aar')
 
     //prosdk
     implementation files('libs/hyfisheyepano.jar')

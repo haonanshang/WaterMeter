@@ -25,7 +25,8 @@ public class FlashActivity extends AppCompatActivity {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
     private PermissionsChecker mPermissionsChecker; // 权限检测器
 
@@ -41,7 +42,7 @@ public class FlashActivity extends AppCompatActivity {
         new SharedPreUtils().SetIp("106.14.33.55:8080", FlashActivity.this);
         mPermissionsChecker = new PermissionsChecker(this);
         if (!mPermissionsChecker.lacksPermissions(PERMISSIONS)) {
-            DeleteImage.Delete();
+            DeleteImage.Delete(this);
             new Thread() {
                 @Override
                 public void run() {

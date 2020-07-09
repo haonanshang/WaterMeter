@@ -3,6 +3,7 @@ package com.example.leonardo.watermeter.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
@@ -55,6 +56,7 @@ import com.example.leonardo.watermeter.utils.ModifyImage;
 import com.example.leonardo.watermeter.utils.PhoneState;
 import com.example.leonardo.watermeter.utils.QuantityCalculationUtils;
 import com.example.leonardo.watermeter.utils.SharedPreUtils;
+import com.example.leonardo.watermeter.utils.SpecialBrandUtil;
 import com.example.leonardo.watermeter.utils.VolumeManage;
 import com.example.leonardo.watermeter.utils.WaterBudgetUtils;
 import com.itgoyo.logtofilelibrary.LogToFileUtils;
@@ -92,8 +94,9 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     private List<DetailData> detailDataListOriginal;
     private DetailData currentData;
     private List<Map<String, Object>> dataList;
-    private String IvaWaterMeter_Path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/IvaWaterMeter";
-    private String IvaWater_Path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/IvaWater";
+    //private String IvaWaterMeter_Path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/IvaWaterMeter";
+//    private String IvaWaterMeter_Path = "data/data/com.example.leonardo.watermeter/IvaWaterMeter";
+//    private String IvaWater_Path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/IvaWater";
     AlertDialog boxBuilder;
     ImageView showImageView, eidLocation, bluetoothPrinter, gpsButton;
     ScrollView scrollView;
@@ -746,6 +749,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
      * @param view
      */
     public void takePhotoUSB(View view) {
+        String IvaWater_Path = GlobalData.getFilePath(this, GlobalData.IVAWATER_PATH);
         if (isupload == 0) {
             Toast.makeText(getApplicationContext(), "数据已经上传，不可再手动修改", Toast.LENGTH_SHORT).show();
         } else {
@@ -845,6 +849,7 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
      * 相机拍照
      */
     public void intentPhoto() {
+        String IvaWaterMeter_Path = GlobalData.getFilePath(this, GlobalData.IVAWATERMETER_PATH);
         if (isupload == 0) {
             Toast.makeText(getApplicationContext(), "数据已经上传，不可在手动修改", Toast.LENGTH_SHORT).show();
         } else {
@@ -930,7 +935,9 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
                      */
                     SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("MM-dd HH:mm:ss");
                     String waterMarkTime = simpleDateFormat1.format(new java.util.Date());
-                    Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, 0, 22);
+                    System.out.println("localImageStr::" + localImageStr);
+                    System.out.println("customCamera::brand::" + Build.MODEL);
+                    Bitmap bmp = ModifyImage.getimage(localImageStr, currentData.getT_card_num() + "     " + waterMarkTime, SpecialBrandUtil.getCustomCameraDegree(Build.MODEL), 22);
                     showImageView.setImageBitmap(bmp);
                     updateDataAfterPhoto(localImageStr);
                 }

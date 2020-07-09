@@ -106,14 +106,14 @@ public class SwitchButton extends View implements View.OnClickListener
 			}
 		}
 		// ������������壬�Լ��о�����˫������ư�
-		int count = canvas.saveLayer(new RectF(mDest), null, Canvas.MATRIX_SAVE_FLAG | Canvas.CLIP_SAVE_FLAG | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
-				| Canvas.CLIP_TO_LAYER_SAVE_FLAG);
+//		int count = canvas.saveLayer(new RectF(mDest), null, Canvas.MATRIX_SAVE_FLAG  | Canvas.CLIP_SAVE_FLAG | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
+//				| Canvas.CLIP_TO_LAYER_SAVE_FLAG);
 
 		canvas.drawBitmap(mSwitchBottom, mSrc, mDest, null);
 		canvas.drawBitmap(mSwitchThumb, mSrc, mDest, null);
 		canvas.drawBitmap(mSwitchFrame, 0, 0, null);
 		canvas.drawBitmap(mSwitchMask, 0, 0, mPaint);
-		canvas.restoreToCount(count);
+		//canvas.restoreToCount(count);
 	}
 
 	@Override

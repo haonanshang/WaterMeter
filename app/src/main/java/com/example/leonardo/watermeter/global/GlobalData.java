@@ -4,6 +4,12 @@ package com.example.leonardo.watermeter.global;
  * Created by Leonardo on 2017/4/25.
  */
 
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
+import java.io.File;
+
 /**
  * 在这里存储一些全局变量
  */
@@ -20,8 +26,34 @@ public class GlobalData {
     public static String[] UniQueBrandArray = {"MANN"};
     public static String Brand = null;
     public static int DetailDivideNum = 500;     //表册划分默认数量
-    public static int EXTERNAL_DEVICE_ONE=0 ;    // 外接设备1
-    public static int EXTERNAL_DEVICE_TWO=1 ;    // 外接设备2
-    public static int EXTERNAL_DEVICE_THREE=2 ;  // 外接设备3
+    public static int EXTERNAL_DEVICE_ONE = 0;    // 外接设备1
+    public static int EXTERNAL_DEVICE_TWO = 1;    // 外接设备2
+    public static int EXTERNAL_DEVICE_THREE = 2;  // 外接设备3
+
+    public static String IVAWATERMETER_PATH = "IvaWaterMeter";
+    public static String IVAWATER_PATH = "IvaWater";
+
+
+    /**
+     * 获取文件夹地址 如果没有地址新建地址
+     *
+     * @param mContext
+     * @param dirName
+     * @return
+     */
+    public  static String getFilePath(Context mContext, String dirName) {
+        File file;
+        if (Environment.getExternalStorageState().equals("mounted")) {
+            file = new File(mContext.getExternalFilesDir(dirName).getPath());
+        } else {
+            file = new File(mContext.getFilesDir().getPath() + File.separator + dirName);
+        }
+
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        System.out.println("GlobalData::get" + dirName + "File -> " + file.getAbsolutePath());
+        return file.getAbsolutePath();
+    }
 
 }

@@ -5,8 +5,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import com.example.leonardo.watermeter.utils.SharedPreUtils;
 import com.syteco.android.hardwareinfo.deploy.AuthBody;
 import com.syteco.android.hardwareinfo.deploy.DeploymentTool;
+import com.syteco.android.hardwareinfo.service.HeartBeatService;
 import com.syteco.android.hardwareinfo.utils.JsonUtils;
 import com.syteco.android.hardwareinfo.utils.LogToFile;
 import com.syteco.android.hardwareinfo.utils.SPUtil;
@@ -37,12 +39,13 @@ public class AuthorCustomUtils {
      * @return
      */
     public static boolean CheckLicence() {
-        String authCode = "B23CFC7E7B42D204D7AF285D62BA0534A6AC577A6424C4233ABE06BFDC312778A";
+        //String authCode = "B23CFC7E7B42D204D7AF285D62BA0534A6AC577A6424C4233ABE06BFDC312778A"; //自测
+        String authCode = "8818C0FF6075DF1B3FB556E9359F4382A6AC577A6424C4233ABE06BFDC312778A";//线上使用
         String result = DeploymentTool.analyzeVerificationCode(authCode);
         final AuthBody authBody1 = (AuthBody) JsonUtils.GSON.fromJson(result, AuthBody.class);
         String licPath = "/mnt/sdcard/syteco/" + authBody1.productSN + "/licence.bin";
         String onLineAuthCode = SPUtil.getString("set_product_sn_code" + authBody1.productSN, "-1");
-        if (LogToFile.fileExsit(licPath) && onLineAuthCode.equals("0")) {
+        if (LogToFile.fileExsit(licPath) && "0".equals(onLineAuthCode)) {
             return true;
         } else {
             return false;

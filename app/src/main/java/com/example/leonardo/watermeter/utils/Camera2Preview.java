@@ -137,6 +137,7 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
                     ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                     byte[] bytes = new byte[buffer.remaining()];
                     File file = new File(imagePath);
+                    //System.out.println("Camera2Preview::setUpCameraOutputs::imagePath::getParentFile -> "+file.getParentFile());
                     buffer.get(bytes);
                     FileOutputStream output = null;
                     try {
@@ -146,8 +147,10 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
                         e.printStackTrace();
                     } finally {
                         try {
-                            output.flush();
-                            output.close();
+                            if (output != null) {
+                                output.flush();
+                                output.close();
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -379,10 +382,10 @@ public class Camera2Preview extends TextureView implements TextureView.SurfaceTe
     /**
      *
      */
-    public void closeCamera(){
-         if(mCameraDevice!=null){
-             mCameraDevice.close();
-         }
+    public void closeCamera() {
+        if (mCameraDevice != null) {
+            mCameraDevice.close();
+        }
     }
 }
 

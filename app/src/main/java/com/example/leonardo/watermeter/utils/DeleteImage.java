@@ -1,6 +1,9 @@
 package com.example.leonardo.watermeter.utils;
 
+import android.content.Context;
 import android.os.Environment;
+
+import com.example.leonardo.watermeter.global.GlobalData;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,11 +14,12 @@ import java.util.TreeSet;
  */
 
 public class DeleteImage {
-    public static void Delete() {
+
+    public static void Delete(Context mContext) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AddFiles(AddPath());
+                AddFiles(AddPath(mContext));
             }
         }).start();
 
@@ -58,11 +62,12 @@ public class DeleteImage {
         }
     }
 
-    private static ArrayList<String> AddPath() {
+    private static ArrayList<String> AddPath(Context mContext) {
         ArrayList<String> pathAll = new ArrayList<>();
-        String pathHead = Environment.getExternalStorageDirectory().toString() + File.separator;
-        pathAll.add(pathHead + "IvaWater");
-        pathAll.add(pathHead + "IvaWaterMeter");
+        //String pathHead = Environment.getExternalStorageDirectory().toString() + File.separator;
+        //System.out.println("DeleteImage::AddPath::pathHead::" + pathHead);
+        pathAll.add(GlobalData.getFilePath(mContext, GlobalData.IVAWATER_PATH));
+        pathAll.add(GlobalData.getFilePath(mContext, GlobalData.IVAWATERMETER_PATH));
         return pathAll;
     }
 
