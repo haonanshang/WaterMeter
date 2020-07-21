@@ -645,14 +645,16 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     public void changeStatus(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(TaskShowActivity.this, android.R.style.Theme_Holo_Light_Dialog);
         builder.setTitle("请选择水表的状态");
-        final String[] meterStatus = parseWaterMeterState();
+        HashMap<String, String> meterStatusMap = parseWaterMeterState();
+        final String[] meterStatus = new String[meterStatusMap.size()];
+        meterStatusMap.keySet().toArray(meterStatus);
         builder.setItems(meterStatus, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 jblxStatus.setText(meterStatus[which]);
                 /*更新数据库中当前Task信息*/
                 ContentValues values = new ContentValues();
-                values.put("t_jblx", String.valueOf(which + 1));
+                values.put("t_jblx", meterStatusMap.get(meterStatus[which]));
                 LitePal.updateAll(DetailData.class, values, "t_id = ?", currentData.getT_id());
             }
         });
@@ -662,16 +664,17 @@ public class TaskShowActivity extends Activity implements View.OnClickListener {
     /**
      * 解析水表状态字符串
      */
-    public String[] parseWaterMeterState() {
+    public HashMap<String, String> parseWaterMeterState() {
         String waterMeterStateStr = currentData.getWater_meter_state();
         JSONArray waterStateArray = JSONObject.parseArray(waterMeterStateStr);
-        String[] meterStatus = new String[waterStateArray.size()];
+        HashMap<String, String> meterStatusMap = new HashMap<>();
         for (int i = 0; i < waterStateArray.size(); i++) {
             JSONObject object = waterStateArray.getJSONObject(i);
             String name = object.getString("name");
-            meterStatus[i] = name;
+            String value = object.getString("value");
+            meterStatusMap.put(name, value);
         }
-        return meterStatus;
+        return meterStatusMap;
     }
 
     /**
