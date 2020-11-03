@@ -1,0 +1,9 @@
+该图标名称
+D:\workspace\WaterMeter_All\WaterMeter\app\src\main\res\layout\act_flash.xml
+D:\workspace\WaterMeter_All\WaterMeter\app\src\main\res\layout\menu_version.xml
+D:\workspace\WaterMeter_All\WaterMeter\app\src\main\res\values\strings.xml
+D:\workspace\WaterMeter_All\WaterMeter\app\src\main\assets\config.properties
+D:\workspace\WaterMeter_All\WaterMeter\app\src\main\AndroidManifest.xml --图标
+
+密码：1983318
+        key0

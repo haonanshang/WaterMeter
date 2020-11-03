@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/bch"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/back_color"
+        android:gravity="center"
+        android:text="李三"
+        android:textColor="@color/cpb_white"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/searchR_bch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <EditText
+                android:id="@+id/divide_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:hint="搜索..."
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:textSize="16dp" />
+
+            <ImageView
+                android:id="@+id/divide_clearSearch"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/ic_close"
+                android:visibility="gone" />
+        </RelativeLayout>
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/divide_taskCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/searchR_bch"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="任务数量为：666"
+        android:textColor="@color/cpb_red"
+        android:textSize="16dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ListView
+            android:id="@+id/divideListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>

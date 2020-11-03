@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/showPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:id="@+id/cancelPic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/showPreview"
+        android:onClick="cancelPicPreview"
+        android:text="重拍"/>
+    <Button
+        android:id="@+id/savePic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/showPreview"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/cancelPic"
+        android:onClick="savePicPreview"
+        android:text="保存"/>
+</RelativeLayout>

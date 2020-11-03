@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mcxtzhang.swipemenulib.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/contentlist"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp">
+
+        <TextView
+            android:id="@+id/contentListLeft"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="月份"
+            android:textSize="22dp" />
+
+        <TextView
+            android:id="@+id/contentListRight"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:text="表册号"
+            android:textSize="22dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btncancel"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:background="#d9dee4"
+        android:text="取消"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/btndelete"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:background="@color/red"
+        android:text="删除"
+        android:textColor="@android:color/white" />
+
+
+</com.mcxtzhang.swipemenulib.SwipeMenuLayout>

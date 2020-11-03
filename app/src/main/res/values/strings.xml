@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name" translatable="false">WaterMeter</string>
+    <string name="title_home" translatable="false">全部</string>
+    <string name="title_dashboard" translatable="false">未抄</string>
+    <string name="title_notifications" translatable="false">已抄</string>
+    <string name="title_status" translatable="false">状态</string>
+    <string name="Upload" translatable="false">Upload</string>
+    <string name="Error" translatable="false">Error</string>
+    <string name="Complete" translatable="false">Complete</string>
+    <string name="select" translatable="false">Select USB Web Camera</string>
+    <string name="camera" translatable="false">Camera</string>
+    <string name="refresh" translatable="false">Refresh</string>
+    <string name="no_device" translatable="false">No USB camera found</string>
+
+    <string name="title_activity_list_view" translatable="false">ListViewActivity</string>
+    <string name="dummy_button" translatable="false">Dummy Button</string>
+    <string name="dummy_content" translatable="false">DUMMY\nCONTENT</string>
+    <string name="title_activity_bchlist_view" translatable="false">BCHListViewActivity</string>
+    <!-- playback activity -->
+    <string name="label_Playback_Activity" translatable="false">Album</string>
+    <string name="tv_Playback_Photos" translatable="false">Photos</string>
+    <string name="tv_Playback_Videos" translatable="false">Videos</string>
+    <string name="tv_Playback_BuiltinSdcard" translatable="false">手机存储</string>
+    <string name="tv_Playback_ExternalSdcard" translatable="false">外置SD卡</string>
+    <string name="str_playback_notfindexcard" translatable="false">未发现存储设备</string>
+    <string name="str_playback_warning" translatable="false">警告</string>
+    <string name="str_playback_deletephoto" translatable="false">删除此图片？</string>
+    <string name="str_playback_deletevideo" translatable="false">删除此视频？</string>
+    <string name="str_playback_confirm" translatable="false">确认</string>
+    <string name="str_playback_cancel" translatable="false" >取消</string>
+
+    <!-- display image activity -->
+    <string name="iv_Display_Image_Content" translatable="false">images</string>
+
+    <!-- gridview photos item -->
+    <string name="tv_Photo_Name" translatable="false">default.jpg</string>
+    <string name="description_iv_change_cam" translatable="false">change camera local or wifi cam</string>
+    <string name="Iv_Pop_Selector" translatable="false">listview selector in popupwindow</string>
+
+    <!-- videoplayer.xml -->
+    <string name="tv_VideoPlayer_Time" translatable="false">tv_VideoPlayer_Time</string>
+
+    <!-- activity_setting.xml -->
+    <string name="tv_SdcardChoose" translatable="false">外置SD卡</string>
+    <string name="tv_TurnDirection" translatable="false">按键靠左</string>
+    <string name="txt_modify_name" translatable="false">修改WiFi名</string>
+    <string name="txt_reboot_device" translatable="false">重启设备</string>
+    <string name="txt_modify_password" translatable="false">修改密码</string>
+    <string name="txt_clear_password" translatable="false">清除密码</string>
+    <string name="txt_change_resolution" translatable="false">修改分辨率</string>
+    <string name="str_set_namenull" translatable="false">名称不能为空！</string>
+    <string name="str_set_lessthaneight" translatable="false">密码不能少于8位！</string>
+    <string name="str_set_setok" translatable="false">设置成功！</string>
+    <string name="str_set_setfail" translatable="false">设置失败！</string>
+    <string name="str_set_tips" translatable="false">提示</string>
+    <string name="str_set_ok" translatable="false">确定</string>
+    <string name="str_set_wrongres" translatable="false">错误的分辨率</string>
+
+    <!-- select activity -->
+    <string name="txt_select_onemorepress" translatable="false">再按一次退出拍照</string>
+
+    <!-- main activity -->
+    <string name="txt_stop_record" translatable="false">请先停止录像</string>
+    <string name="SD_card_full" translatable="false">SD卡空间不足</string>
+
+    <!-- ImagePager Activity -->
+    <string name="str_imagepager_filename" translatable="false">文件名：</string>
+    <string name="str_imagepager_filepath" translatable="false">文件路径：</string>
+    <string name="str_imagepager_time" translatable="false">时间：</string>
+    <string name="str_imagepager_filesize" translatable="false">文件大小：</string>
+    <string name="str_imagepager_resolution" translatable="false">分辨率：</string>
+    <string name="str_imagepager_filetype" translatable="false">文件类型：</string>
+    <string-array name="menulist">
+        <item>"版本号"</item>
+        <item>"动态IP"</item>
+        <item>"数据切换"</item>
+        <item>"上传列表"</item>
+        <item>"导出列表"</item>
+        <item>"年份选择"</item>
+        <item>"外接设置"</item>
+        <item>"表册设置"</item>
+        <item>"设备绑定"</item>
+        <item>"其他设置"</item>
+    </string-array>
+
+    <!--  蓝牙打印机-->
+    <!--  蓝牙打印机-->
+    <!--  DeviceListActivity -->
+    <string name="scanning" translatable="false">Scanning Device&#8230;</string>
+    <string name="select_device" translatable="false">选择设备</string>
+    <string name="none_paired" translatable="false">未配对设备</string>
+    <string name="none_found" translatable="false">无设备发现</string>
+    <string name="title_paired_devices" translatable="false">配对设备</string>
+    <string name="title_other_devices" translatable="false">其他可用设备</string>
+    <string name="button_scan" translatable="false">扫描设备</string>
+
+    <!-- 新版相机  proSDK -->
+    <string name="alert_title_login_failed" translatable="false">登录失败!</string>
+    <string name="notice_Result_BadResult" translatable="false">数据损坏.</string>
+    <string name="alert_connect_tips" translatable="false">建议：下拉列表刷新一下再尝试连接，并检查下网络是否正确连接.</string>
+    <string name="notice_Result_VerifyFailed" translatable="false">验证错误.</string>
+    <string name="notice_Result_UserNoExist" translatable="false">用户不存在.</string>
+    <string name="notice_Result_PWDError" translatable="false">用户名或密码错误.</string>
+    <string name="notice_Result_Old_Version" translatable="false">前端设备版本不支持.</string>
+    <string name="notice_Result_ConnectServerFailed" translatable="false">连接设备失败.</string>
+    <string name="alert_btn_OK" translatable="false">确定</string>
+</resources>

@@ -1,0 +1,19 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:backgroundTintMode="multiply"
+    android:padding="5dp">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="savePic"
+        android:text="Save Detect Pic"/>
+    <com.example.leonardo.watermeter.usbcamera.UVCCameraTextureView
+        android:id="@+id/texture_camera_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

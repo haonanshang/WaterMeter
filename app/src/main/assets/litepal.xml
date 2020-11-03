@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="wmdb"></dbname>
+
+    <list>
+        <mapping class="com.example.leonardo.watermeter.entity.BchData"></mapping>
+        <mapping class="com.example.leonardo.watermeter.entity.DetailData"></mapping>
+        <mapping class="com.example.leonardo.watermeter.entity.DetailDivideData"></mapping>
+        <mapping class="com.FireHydrant.entity.FireHydrantBchData"></mapping>
+        <mapping class="com.FireHydrant.entity.FireHydrantDetailData"></mapping>
+    </list>
+    <!--- 数据库调整更改参数 -->
+    <version value="34"></version>
+</litepal>

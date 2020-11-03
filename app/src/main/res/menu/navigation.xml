@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_all_task"
+        android:title="@string/title_home" />
+
+    <item
+        android:id="@+id/navigation_no_task"
+        android:icon="@drawable/ic_not_task"
+        android:title="@string/title_dashboard" />
+
+    <item
+        android:id="@+id/navigation_done_task"
+        android:icon="@drawable/ic_done_task"
+        android:title="@string/title_notifications" />
+    <item
+        android:id="@+id/navigation_status"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/title_status" />
+
+</menu>

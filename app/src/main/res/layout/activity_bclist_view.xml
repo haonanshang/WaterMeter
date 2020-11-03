@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:id="@+id/titleL1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/back_color">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="表册号列表"
+            android:textColor="@color/cpb_white"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tipNumber"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/titleL1"
+        android:layout_margin="4dp"
+        android:background="@drawable/bg_border">
+
+        <TextView
+            android:id="@+id/monthAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="全部数据：9999"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/monthNot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="未抄数据：6666"
+            android:textColor="@color/cpb_red"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/monthDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="已抄数据：3333"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tipNumber">
+
+        <ListView
+            android:id="@+id/bchListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+
+</RelativeLayout>
